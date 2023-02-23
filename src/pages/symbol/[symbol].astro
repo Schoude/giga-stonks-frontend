@@ -1,0 +1,15 @@
+---
+import NavigationPage from '../../components/NavigationPage.astro';
+import Layout from "../../layouts/Layout.astro";
+
+const { symbol } = Astro.params;
+---
+
+<Layout title="Giga Stonks - Overview">
+  <main>
+    <NavigationPage />
+    <p>{symbol}</p>
+  </main>
+</Layout>
+
+<style></style>

@@ -1,18 +1,19 @@
 {
-	"name": "giga-stonk-frontend",
-	"type": "module",
-	"version": "0.0.1",
-	"scripts": {
-		"dev": "astro dev",
-		"start": "astro dev",
-		"build": "astro build",
-		"preview": "astro preview",
-		"astro": "astro"
-	},
-	"dependencies": {
-		"astro": "^2.0.15"
-	},
-	"devDependencies": {
-		"sass": "^1.58.3"
-	}
+  "name": "giga-stonk-frontend",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "deno run --allow-net --allow-read --allow-env ./dist/server/entry.mjs",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/deno": "^4.0.2",
+    "astro": "^2.0.15"
+  },
+  "devDependencies": {
+    "sass": "^1.58.3"
+  }
 }
