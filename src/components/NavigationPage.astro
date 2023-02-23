@@ -1,0 +1,20 @@
+---
+import Logo from './Logo.astro';
+
+---
+
+<nav class="navigation-page">
+  <a class:list={['link-home']} href="/" title="Giga Stonks Home">
+    <Logo />
+  </a>
+</nav>
+
+<style lang="scss">
+  .navigation-page {
+    padding: .5rem;
+  }
+
+  .link-home {
+    display: inline-block;
+  }
+</style>
