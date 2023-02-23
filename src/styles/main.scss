@@ -4,6 +4,7 @@
 body {
   background: linear-gradient(to bottom, rgba(10, 17, 27, 1) 0%,rgba(28, 44, 60, 1) 100%);
   color: var(--color-text);
+  padding: .5rem;
 }
 
 h1 {
@@ -12,4 +13,8 @@ h1 {
 
 h2 {
   font-size: 1.75rem;
+}
+
+.news-container {
+  max-inline-size: 650px;
 }
