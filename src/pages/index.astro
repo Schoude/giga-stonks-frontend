@@ -1,12 +1,18 @@
 ---
 import NavigationPage from '../components/NavigationPage.astro';
+import MarketNews from '../components/news/MarketNews.astro';
+import NewsSentiment from '../components/news/NewsSentiment.astro';
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Giga Stonks - Overview">
   <main>
     <NavigationPage />
-    <a href="/symbol/AAPL">AAPL</a>
+    <section class="markets-overview">
+      <h1>Markets Overview</h1>
+      <!-- <NewsSentiment /> -->
+      <MarketNews />
+    </section>
   </main>
 </Layout>
 

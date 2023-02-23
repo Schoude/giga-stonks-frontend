@@ -1,5 +1,15 @@
 @use 'reset';
+@use 'theme';
 
 body {
   background: linear-gradient(to bottom, rgba(10, 17, 27, 1) 0%,rgba(28, 44, 60, 1) 100%);
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.75rem;
 }
