@@ -1,5 +1,6 @@
 @use 'reset';
 @use 'theme';
+@use 'mixins';
 
 body {
   background: linear-gradient(to bottom, rgba(10, 17, 27, 1) 0%,rgba(28, 44, 60, 1) 100%);
@@ -16,5 +17,14 @@ h2 {
 }
 
 .news-container {
-  max-inline-size: 650px;
+  max-inline-size: 600px;
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .articles {
+    overflow: auto;
+
+    @include mixins.scrollbars();
+  }
 }

@@ -1,29 +1,23 @@
 ---
 import Container from "../container/Container.astro";
-
-interface MarketNewsArticle {
-  headline: string;
-  category: string;
-  datetime: number;
-  id: number;
-  image: string;
-  source: string;
-  summary: string;
-  url: string;
-}
+import ArticleMarketNews from './articles/ArticleMarketNews.astro';
+import type { MarketNewsArticle } from './articles/ArticleMarketNews.astro';
 
 const marketNews = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/market-news')).json() as MarketNewsArticle[];
 ---
 
 <Container outlined={true} class="market-news news-container">
-  <h2>Market News</h2>
-  <hr>
-  <p class="article-count">{marketNews.length} Articles</p>
-  {marketNews[0].category}
+  <header>
+    <h2>Market News</h2>
+    <hr>
+    <p class="article-count">{marketNews.length} Articles</p>
+  </header>
+  <div class="articles">
+    {marketNews.map(article => (<ArticleMarketNews article={article}/>))}
+  </div>
 </Container>
 
 <style lang="scss">
-
 hr {
   border-style: solid;
   border-color: var(--color-accent);

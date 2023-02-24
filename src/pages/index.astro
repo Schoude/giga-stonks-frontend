@@ -6,12 +6,33 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="Giga Stonks - Overview">
-  <main>
-    <NavigationPage />
-    <section class="markets-overview">
+  <main class="markets-overview">
+    <div class="col">
+      <NavigationPage />
       <h1>Markets Overview</h1>
-      <!-- <NewsSentiment /> -->
+    </div>
+    <div class="col">
       <MarketNews />
-    </section>
+    </div>
+    <div class="col">
+      <MarketNews />
+    </div>
   </main>
 </Layout>
+
+<style lang="scss">
+.markets-overview {
+  block-size: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+
+  > * {
+    flex-basis: 600px;
+  }
+}
+
+.col {
+  block-size: 100%;
+}
+</style>

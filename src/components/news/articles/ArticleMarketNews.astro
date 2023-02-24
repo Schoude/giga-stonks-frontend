@@ -1,0 +1,77 @@
+---
+export interface MarketNewsArticle {
+  headline: string;
+  category: string;
+  datetime: number;
+  id: number;
+  image: string;
+  source: string;
+  summary: string;
+  url: string;
+}
+
+export interface Props {
+  article: MarketNewsArticle;
+}
+
+const {article} = Astro.props;
+---
+
+<article class:list={'article-market-news'}>
+  <div class="image">
+    <img src={article.image} alt={article.headline}>
+  </div>
+  <div class="text-content">
+    <h3 class="headline">
+      <a href={article.url} target="_blank" rel="noopener" title={article.headline}>{article.headline}</a>
+    </h3>
+    <div class="meta">
+      <span class="datetime">{new Date(article.datetime * 1000).toLocaleDateString()}</span>
+      <span class="source">{article.source}</span>
+      <span class="category">{article.category}</span>
+    </div>
+    <div class="summary">{article.summary}</div>
+  </div>
+</article>
+
+
+<style lang="scss">
+@use '../../../styles/mixins';
+
+.article-market-news {
+  display: flex;
+  gap: 1rem;
+
+  & + & {
+    margin-block-start: 1rem;
+  }
+
+  img {
+    aspect-ratio: 230 / 130;
+    max-width: 230px;
+    object-fit: cover;
+  }
+}
+
+.headline {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.headline,
+.summary {
+  line-height: 1.5;
+  font-size: .875rem;
+  @include mixins.lineclamp();
+}
+
+.meta {
+  font-size: .75rem;
+  margin-block: 1rem;
+  font-weight: 300;
+
+  span + span {
+    margin-inline-start: 2rem;
+  }
+}
+</style>
