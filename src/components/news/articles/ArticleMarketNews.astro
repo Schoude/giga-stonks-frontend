@@ -26,7 +26,7 @@ const {article} = Astro.props;
       <a href={article.url} target="_blank" rel="noopener" title={article.headline}>{article.headline}</a>
     </h3>
     <div class="meta">
-      <span class="datetime">{new Date(article.datetime * 1000).toLocaleDateString()}</span>
+      <span class="datetime">{new Date(article.datetime * 1000).toLocaleString()}</span>
       <span class="source">{article.source}</span>
       <span class="category">{article.category}</span>
     </div>
