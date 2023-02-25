@@ -27,19 +27,35 @@ const {article} = Astro.props;
 ---
 
 <article class:list={'article-news-sentiment'}>
-  <div class="image">
-    <img src={article.banner_image ? article.banner_image : '/images/news-placeholder.png'} alt={article.title}>
-  </div>
-  <div class="text-content">
-    <h3 class="headline">
-      <a href={article.url} target="_blank" rel="noopener" title={article.title}>{article.title}</a>
-    </h3>
-    <div class="meta">
-      <span class="datetime">{new Date(article.time_published).toLocaleString()}</span>
-      <span class="source">{article.source}</span>
-      <span class="category">{article.category_within_source}</span>
+  <div class="row">
+    <div class="image">
+      <img src={article.banner_image ? article.banner_image : '/images/news-placeholder.png'} alt={article.title}>
     </div>
-    <div class="summary">{article.summary}</div>
+    <div class="text-content">
+      <h3 class="headline">
+        <a href={article.url} target="_blank" rel="noopener" title={article.title}>{article.title}</a>
+      </h3>
+      <div class="meta">
+        <span class="datetime">{new Date(article.time_published).toLocaleString()}</span>
+        <span class="source">{article.source}</span>
+        <span class="category">{article.category_within_source}</span>
+      </div>
+      <div class="summary">{article.summary}</div>
+    </div>
+  </div>
+  <div class="ticker-sentiments">
+    {article.ticker_sentiment.length > 0 &&
+      (<div class="ticker-sentiments-scroller">
+        {article.ticker_sentiment.map(ticker => {
+          return (
+            <div class:list={['ticker-data', ticker.ticker_sentiment_label.toLowerCase()]}>
+              <div class="ticker">{ticker.ticker}</div>
+              <div class="sentiment">{ticker.ticker_sentiment_label}</div>
+            </div>
+          )
+        })}
+      </div>)
+    }
   </div>
 </article>
 
@@ -48,12 +64,14 @@ const {article} = Astro.props;
 @use '../../../styles/mixins';
 
 .article-news-sentiment {
-  display: flex;
-  gap: 1rem;
-
   & + & {
     margin-block-start: 1rem;
   }
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
 
   img {
     aspect-ratio: 230 / 130;
@@ -82,5 +100,35 @@ const {article} = Astro.props;
   span + span {
     margin-inline-start: 2rem;
   }
+}
+
+.ticker-sentiments {
+  padding-block-start: .5rem;
+  overflow: hidden;
+}
+
+.ticker-sentiments-scroller {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  @include mixins.scrollbars();
+}
+
+.ticker-data {
+  font-weight: 300;
+  text-align: center;
+  font-size: .7rem;
+
+  .ticker {
+    font-size: .8rem;
+  }
+}
+
+[class*="bullish"] {
+  color: var(--color-positive);
+}
+
+[class*="bearish"] {
+  color: var(--color-negative);
 }
 </style>
