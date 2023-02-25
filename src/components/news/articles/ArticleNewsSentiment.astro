@@ -1,0 +1,90 @@
+---
+interface NewsSentimentTicker {
+  relevance_score: string;
+  ticker: string;
+  ticker_sentiment_label: string;
+  ticker_sentiment_score: string;
+}
+
+export interface NewsSentimentArticle {
+  banner_image: string | null,
+  category_within_source: string;
+  overall_sentiment_label: string;
+  overall_sentiment_score: number;
+  source: string;
+  summary: string;
+  ticker_sentiment: NewsSentimentTicker[],
+  time_published: string;
+  title: string;
+  url: string;
+}
+
+export interface Props {
+  article: NewsSentimentArticle;
+}
+
+const {article} = Astro.props;
+
+console.log(article.time_published);
+console.log(article.banner_image);
+
+---
+
+<article class:list={'article-news-sentiment'}>
+  <div class="image">
+    <img src={article.banner_image ? article.banner_image : '/images/news-placeholder.png'} alt={article.title}>
+  </div>
+  <div class="text-content">
+    <h3 class="headline">
+      <a href={article.url} target="_blank" rel="noopener" title={article.title}>{article.title}</a>
+    </h3>
+    <div class="meta">
+      <span class="datetime">{new Date(article.time_published).toLocaleString()}</span>
+      <span class="source">{article.source}</span>
+      <span class="category">{article.category_within_source}</span>
+    </div>
+    <div class="summary">{article.summary}</div>
+  </div>
+</article>
+
+
+<style lang="scss">
+@use '../../../styles/mixins';
+
+.article-news-sentiment {
+  display: flex;
+  gap: 1rem;
+
+  & + & {
+    margin-block-start: 1rem;
+  }
+
+  img {
+    aspect-ratio: 230 / 130;
+    max-width: 230px;
+    object-fit: cover;
+  }
+}
+
+.headline {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
+.headline,
+.summary {
+  line-height: 1.5;
+  font-size: .875rem;
+  @include mixins.lineclamp();
+}
+
+.meta {
+  font-size: .75rem;
+  margin-block: 1rem;
+  font-weight: 300;
+
+  span + span {
+    margin-inline-start: 2rem;
+  }
+}
+</style>

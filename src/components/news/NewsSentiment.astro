@@ -1,8 +1,65 @@
 ---
 import Container from "../container/Container.astro";
+import { getISODate } from '../../utils';
+import ArticleNewsSentiment from './articles/ArticleNewsSentiment.astro';
 
+interface NewsSentiments {
+  news_bullish: [],
+  news_bearish: [],
+}
+
+const newsSentiments = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/news-sentiment?time_from=${getISODate()}`)).json() as NewsSentiments;
 ---
 
 <Container outlined={true} class="news-sentiment news-container">
-  <h2>News Sentiment</h2>
+  <header>
+    <h2>News Sentiment</h2>
+    <hr>
+  </header>
+  <div class="articles">
+    <div class="sub-articles">
+      <p class="article-count">{newsSentiments.news_bullish.length} Bullish Articles</p>
+      <div class="articles-scroller">
+        {newsSentiments.news_bullish.map(article => (<ArticleNewsSentiment article={article} />))}
+      </div>
+    </div>
+    <div class="sub-articles">
+      <p class="article-count">{newsSentiments.news_bearish.length} Bearish Articles</p>
+      <div class="articles-scroller">
+        {newsSentiments.news_bearish.map(article => (<ArticleNewsSentiment article={article} />))}
+      </div>
+    </div>
+  </div>
 </Container>
+
+<style lang="scss">
+@use '../../styles/mixins';
+//
+hr {
+  border-style: solid;
+  border-color: var(--color-accent);
+}
+
+.news-sentiment.news-sentiment .articles {
+  overflow: hidden;
+  flex-grow: 1;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  gap: 1rem;
+}
+
+.sub-articles {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-count {
+  text-align: end;
+  margin-block: 1rem;
+}
+
+.articles-scroller {
+  overflow: auto;
+  @include mixins.scrollbars();
+}
+</style>
