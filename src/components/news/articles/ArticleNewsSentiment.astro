@@ -1,4 +1,6 @@
 ---
+import { ISODateToJSDate } from '../../../utils';
+
 interface NewsSentimentTicker {
   relevance_score: string;
   ticker: string;
@@ -36,7 +38,7 @@ const {article} = Astro.props;
         <a href={article.url} target="_blank" rel="noopener" title={article.title}>{article.title}</a>
       </h3>
       <div class="meta">
-        <span class="datetime">{new Date(article.time_published).toLocaleString()}</span>
+        <span class="datetime">{new Date(ISODateToJSDate(article.time_published)).toLocaleDateString()}</span>
         <span class="source">{article.source}</span>
         <span class="category">{article.category_within_source}</span>
       </div>
