@@ -1,15 +1,18 @@
 ---
 import type { QuotesData } from '../../types/quotes';
 import Container from '../container/Container.astro';
+import IconArrow from '../icons/IconArrow.astro';
 
 const quotesDJIA = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json()) as QuotesData;
 const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
+console.log(quotesDJIA.sentiment);
+
 ---
 <Container class={'quotes-djia'}>
-  <h3 class:list={['quotes-title']}>Dow Jones</h3>
+  <h2 class:list={['quotes-title']}>Dow Jones<IconArrow class={quotesDJIA.sentiment}/></h2>
   <div class="quotes-lists">
     <div class="quotes-bullish">
-      <div class="meta">{quotesDJIA.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesDJIA.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></div>
+      <p class="meta">{quotesDJIA.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesDJIA.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></p>
       <div class="quotes-scroller">
         <article>Apple Inc.</article>
         <article>Apple Inc.</article>
@@ -24,7 +27,7 @@ const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
       </div>
     </div>
     <div class="quotes-bearish">
-      <div class="meta">{quotesDJIA.losers.length} / {stocksCount} Losers <span class="delta-percent-bearish">{quotesDJIA.avg_percentage_losses?.toFixed(2) ?? '-0.00'}%</span></div>
+      <p class="meta">{quotesDJIA.losers.length} / {stocksCount} Losers <span class="delta-percent-bearish">{quotesDJIA.avg_percentage_losses?.toFixed(2) ?? '-0.00'}%</span></p>
       <div class="quotes-scroller">
         <article>Alphabet</article>
         <article>Alphabet</article>
@@ -40,3 +43,30 @@ const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
     </div>
   </div>
 </Container>
+
+<style lang="scss">
+.quotes-title {
+  display: flex;
+  gap: .75rem;
+}
+
+.quotes-lists {
+  font-weight: 300;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.meta {
+  font-size: .75rem;
+  margin-block-start: .5rem;
+  margin-block-end: 1rem;
+}
+
+.delta-percent-bullish {
+  color: var(--color-positive);
+}
+
+.delta-percent-bearish {
+  color: var(--color-negative);
+}
+</style>
