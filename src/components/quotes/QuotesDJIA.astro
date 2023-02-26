@@ -2,11 +2,10 @@
 import type { QuotesData } from '../../types/quotes';
 import Container from '../container/Container.astro';
 import IconArrow from '../icons/IconArrow.astro';
+import CardQuote from './CardQuote.astro';
 
 const quotesDJIA = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json()) as QuotesData;
 const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
-console.log(quotesDJIA.sentiment);
-
 ---
 <Container class={'quotes-djia'}>
   <h2 class:list={['quotes-title']}>Dow Jones<IconArrow class={quotesDJIA.sentiment}/></h2>
@@ -14,45 +13,37 @@ console.log(quotesDJIA.sentiment);
     <div class="quotes-bullish">
       <p class="meta">{quotesDJIA.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesDJIA.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></p>
       <div class="quotes-scroller">
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
-        <article>Apple Inc.</article>
+        {quotesDJIA.gainers.map(gainer => (<CardQuote quote={gainer} type={'bullish'}/>))}
       </div>
     </div>
     <div class="quotes-bearish">
       <p class="meta">{quotesDJIA.losers.length} / {stocksCount} Losers <span class="delta-percent-bearish">{quotesDJIA.avg_percentage_losses?.toFixed(2) ?? '-0.00'}%</span></p>
       <div class="quotes-scroller">
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
-        <article>Alphabet</article>
+        {quotesDJIA.losers.map(gainer => (<CardQuote quote={gainer} type={'bearish'}/>))}
       </div>
     </div>
   </div>
 </Container>
 
 <style lang="scss">
+@use '../../styles/mixins';
+
+.quotes-djia {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .quotes-title {
   display: flex;
   gap: .75rem;
 }
 
 .quotes-lists {
+  min-block-size: 0;
   font-weight: 300;
   display: grid;
+  gap: .5rem;
   grid-template-columns: 1fr 1fr;
 }
 
@@ -73,5 +64,21 @@ console.log(quotesDJIA.sentiment);
 .delta-percent-bullish,
 .delta-percent-bearish {
   font-weight: 700;
+}
+
+.quotes-bullish,
+.quotes-bearish {
+  display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.quotes-scroller {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  display: grid;
+  gap: .5rem;
+  @include mixins.scrollbars();
 }
 </style>

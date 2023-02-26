@@ -8,10 +8,12 @@ import Layout from "../layouts/Layout.astro";
 
 <Layout title="Giga Stonks - Overview">
   <main class="markets-overview">
-    <div class="col">
+    <div class="col col-markets">
       <NavigationPage />
-      <h1>Markets Overview</h1>
-      <QuotesDJIA />
+      <div class="markets">
+        <QuotesDJIA />
+        <QuotesDJIA />
+      </div>
     </div>
     <div class="col">
       <NewsSentiment />
@@ -37,5 +39,18 @@ import Layout from "../layouts/Layout.astro";
 
 .col {
   block-size: 100%;
+}
+
+.col-markets {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.markets {
+  overflow: hidden;
+  flex-grow: 1;
+  display: grid;
+  grid-template-rows: 50% 50%;
 }
 </style>

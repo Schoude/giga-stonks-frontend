@@ -1,4 +1,4 @@
-interface StockQuote {
+export interface StockQuote {
   "current_price": number;
   "delta": number;
   "delta_percent": number;
