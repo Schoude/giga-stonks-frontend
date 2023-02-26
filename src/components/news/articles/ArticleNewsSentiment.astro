@@ -40,7 +40,7 @@ const {article} = Astro.props;
       <div class="meta">
         <span class="datetime">{new Date(ISODateToJSDate(article.time_published)).toLocaleDateString()}</span>
         <span class="source">{article.source}</span>
-        <span class="category">{article.category_within_source}</span>
+        <span class="sentiment-label">{article.overall_sentiment_label} ({article.overall_sentiment_score.toFixed(2)})</span>
       </div>
       <div class="summary">{article.summary}</div>
     </div>
