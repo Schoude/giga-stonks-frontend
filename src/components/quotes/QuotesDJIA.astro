@@ -1,0 +1,42 @@
+---
+import type { QuotesData } from '../../types/quotes';
+import Container from '../container/Container.astro';
+
+const quotesDJIA = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json()) as QuotesData;
+const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
+---
+<Container class={'quotes-djia'}>
+  <h3 class:list={['quotes-title']}>Dow Jones</h3>
+  <div class="quotes-lists">
+    <div class="quotes-bullish">
+      <div class="meta">{quotesDJIA.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesDJIA.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></div>
+      <div class="quotes-scroller">
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+        <article>Apple Inc.</article>
+      </div>
+    </div>
+    <div class="quotes-bearish">
+      <div class="meta">{quotesDJIA.losers.length} / {stocksCount} Losers <span class="delta-percent-bearish">{quotesDJIA.avg_percentage_losses?.toFixed(2) ?? '-0.00'}%</span></div>
+      <div class="quotes-scroller">
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+        <article>Alphabet</article>
+      </div>
+    </div>
+  </div>
+</Container>
