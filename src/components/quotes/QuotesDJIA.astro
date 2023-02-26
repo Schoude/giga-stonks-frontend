@@ -4,11 +4,17 @@ import Container from '../container/Container.astro';
 import IconArrow from '../icons/IconArrow.astro';
 import CardQuote from './CardQuote.astro';
 
+export interface Props {
+  openStatus: 'closed' | 'open';
+}
+
 const quotesDJIA = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json()) as QuotesData;
 const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
+
+const {openStatus} = Astro.props;
 ---
 <Container class={'quotes-djia'}>
-  <h2 class:list={['quotes-title']}>Dow Jones<IconArrow class={quotesDJIA.sentiment}/></h2>
+  <h2 class:list={['quotes-title', openStatus]}><i class="dot"/>Dow Jones<IconArrow class={quotesDJIA.sentiment}/></h2>
   <div class="quotes-lists">
     <div class="quotes-bullish">
       <p class="meta">{quotesDJIA.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesDJIA.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></p>
@@ -37,6 +43,24 @@ const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
 .quotes-title {
   display: flex;
   gap: .75rem;
+  align-items: center;
+
+  .dot {
+    block-size: 10px;
+    inline-size: 10px;
+    border-radius: 50%;
+  }
+
+  &.open {
+    .dot{
+      background-color: var(--color-positive);
+    }
+  }
+  &.closed {
+    .dot{
+      background-color: var(--color-negative);
+    }
+  }
 }
 
 .quotes-lists {
@@ -69,8 +93,8 @@ const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
 .quotes-bullish,
 .quotes-bearish {
   display: flex;
-    flex-direction: column;
-    overflow: hidden;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .quotes-scroller {

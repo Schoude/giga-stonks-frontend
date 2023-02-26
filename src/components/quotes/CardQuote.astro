@@ -10,14 +10,14 @@ const {quote, type} = Astro.props;
 ---
 
 <article class:list={['card-quote', type]}>
-  <h3 class="heading"><span class="title">{quote.name}</span> <span class:list={['movement', type]}>{quote.delta_percent.toFixed(2)}% <small>(${quote.delta.toFixed(2)})</small></span></h3>
+  <h3 class="heading"><span class="title">{quote.name}</span></h3>
   <div class="meta">
     <div class="meta-data">Closing: ${quote.previous_close.toFixed(2)}</div>
     <div class="meta-data">Open: ${quote.open.toFixed(2)}</div>
     <div class="meta-data">High: ${quote.high.toFixed(2)}</div>
     <div class="meta-data">Low: ${quote.low.toFixed(2)}</div>
   </div>
-  <div class="current">${quote.current_price.toFixed(2)}</div>
+  <div class="current">${quote.current_price.toFixed(2)}<span class:list={['movement', type]}>{quote.delta_percent.toFixed(2)}% <small>(${quote.delta.toFixed(2)})</small></span></div>
 </article>
 
 <style lang="scss">
@@ -26,16 +26,9 @@ const {quote, type} = Astro.props;
 }
 
 .heading {
-  font-size: 1rem;
+  font-size: 1.125rem;
   display: flex;
   font-weight: 700;
-
-  .title {
-    inline-size: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-  }
 }
 
 .movement {
@@ -64,6 +57,10 @@ const {quote, type} = Astro.props;
   margin-block-start: 1rem;
   font-size: 1.25rem;
   font-weight: 700;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
 }
 
 .bullish {

@@ -4,6 +4,10 @@ import MarketNews from '../components/news/MarketNews.astro';
 import NewsSentiment from '../components/news/NewsSentiment.astro';
 import QuotesDJIA from '../components/quotes/QuotesDJIA.astro';
 import Layout from "../layouts/Layout.astro";
+import type { MarketStatus } from '../types/market-status';
+
+const marketStatus = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/market-status')).json() as MarketStatus[];
+const marketStatusUS = marketStatus.find(status => status.region === "United States") as MarketStatus;
 ---
 
 <Layout title="Giga Stonks - Overview">
@@ -11,8 +15,8 @@ import Layout from "../layouts/Layout.astro";
     <div class="col col-markets">
       <NavigationPage />
       <div class="markets">
-        <QuotesDJIA />
-        <QuotesDJIA />
+        <QuotesDJIA openStatus={marketStatusUS?.current_status ?? 'closed'}/>
+        <QuotesDJIA openStatus={marketStatusUS?.current_status ?? 'closed'}/>
       </div>
     </div>
     <div class="col">
