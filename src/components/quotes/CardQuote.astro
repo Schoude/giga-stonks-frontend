@@ -10,19 +10,28 @@ const {quote, type} = Astro.props;
 ---
 
 <article class:list={['card-quote', type]}>
-  <h3 class="heading"><span class="title">{quote.name}</span></h3>
-  <div class="meta">
-    <div class="meta-data">Closing: ${quote.previous_close.toFixed(2)}</div>
-    <div class="meta-data">Open: ${quote.open.toFixed(2)}</div>
-    <div class="meta-data">High: ${quote.high.toFixed(2)}</div>
-    <div class="meta-data">Low: ${quote.low.toFixed(2)}</div>
-  </div>
-  <div class="current">${quote.current_price.toFixed(2)}<span class:list={['movement', type]}>{quote.delta_percent.toFixed(2)}% <small>(${quote.delta.toFixed(2)})</small></span></div>
+  <a href={`/symbol/${quote.symbol}`}>
+    <h3 class="heading"><span class="title">{quote.name}</span></h3>
+    <div class="meta">
+      <div class="meta-data">Closing: ${quote.previous_close.toFixed(2)}</div>
+      <div class="meta-data">Open: ${quote.open.toFixed(2)}</div>
+      <div class="meta-data">High: ${quote.high.toFixed(2)}</div>
+      <div class="meta-data">Low: ${quote.low.toFixed(2)}</div>
+    </div>
+    <div class="current">${quote.current_price.toFixed(2)}<span class:list={['movement', type]}>{quote.delta_percent.toFixed(2)}% <small>(${quote.delta.toFixed(2)})</small></span></div>
+</a>
 </article>
 
 <style lang="scss">
 .card-quote {
-  padding: 1rem;
+  a {
+    padding: 1rem;
+    display: block;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 
 .heading {

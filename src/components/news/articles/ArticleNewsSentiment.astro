@@ -51,7 +51,7 @@ const {article} = Astro.props;
         {article.ticker_sentiment.map(ticker => {
           return (
             <div class:list={['ticker-data', ticker.ticker_sentiment_label.toLowerCase()]}>
-              <div class="ticker">{ticker.ticker}</div>
+              <a class="ticker" href={`/symbol/${ticker.ticker}`}>{ticker.ticker}</a>
               <div class="sentiment">{ticker.ticker_sentiment_label}</div>
             </div>
           )
