@@ -1,0 +1,151 @@
+---
+import type { QuotesData } from '../../types/quotes';
+import Container from '../container/Container.astro';
+import IconArrow from '../icons/IconArrow.astro';
+import IconRotate from '../icons/IconRotate.astro';
+import CardQuote from './CardQuote.astro';
+
+export interface Props {
+  openStatus: 'closed' | 'open';
+}
+
+const quotesNASDAQ: QuotesData = {
+  avg_percentage_gains: 0.0,
+  avg_percentage_losses: -0.0,
+  gainers: [],
+  losers: [],
+  rate_limit_remaining: 0,
+  rate_limit_reset: 1677446340,
+  sentiment: "bearish",
+};
+const stocksCount = quotesNASDAQ.gainers.length + quotesNASDAQ.losers.length;
+
+const {openStatus} = Astro.props;
+---
+<Container class={'quotes-nasdaq'}>
+  <header>
+    <h2 class:list={['quotes-title', openStatus]}><i class="dot"/>NASDAQ<IconArrow class={quotesNASDAQ.sentiment}/></h2>
+    <button type="button" class="btn-reload" title="Reload data"><IconRotate /></button>
+  </header>
+  <div class="quotes-lists">
+    <div class="quotes-bullish">
+      <p class="meta">{quotesNASDAQ.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesNASDAQ.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></p>
+      <div class="quotes-scroller">
+        {quotesNASDAQ.gainers.map(gainer => (<CardQuote quote={gainer} type={'bullish'}/>))}
+      </div>
+    </div>
+    <div class="quotes-bearish">
+      <p class="meta">{quotesNASDAQ.losers.length} / {stocksCount} Losers <span class="delta-percent-bearish">{quotesNASDAQ.avg_percentage_losses?.toFixed(2) ?? '-0.00'}%</span></p>
+      <div class="quotes-scroller">
+        {quotesNASDAQ.losers.map(gainer => (<CardQuote quote={gainer} type={'bearish'}/>))}
+      </div>
+    </div>
+  </div>
+</Container>
+
+<script lang="ts">
+  const btnReload = document.querySelector('.btn-reload');
+
+  async function fetchData() {
+    console.log('fetchData');
+    const quotes = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/nasdaq')).json());
+    console.log({quotes});
+  }
+
+  btnReload.addEventListener('click', fetchData);
+</script>
+
+<style lang="scss">
+@use '../../styles/mixins';
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quotes-nasdaq {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.quotes-title {
+  display: flex;
+  gap: .75rem;
+  align-items: center;
+
+  .dot {
+    block-size: 10px;
+    inline-size: 10px;
+    border-radius: 50%;
+  }
+
+  &.open {
+    .dot{
+      background-color: var(--color-positive);
+    }
+  }
+  &.closed {
+    .dot{
+      background-color: var(--color-negative);
+    }
+  }
+}
+
+.btn-reload {
+  border: none;
+  background-color: #0a111b;
+  border-radius: 50%;
+  block-size: 32px;
+  inline-size: 32px;
+  cursor: pointer;
+
+  .icon-rotate {
+    fill: var(--color-text);
+  }
+}
+
+.quotes-lists {
+  min-block-size: 0;
+  font-weight: 300;
+  display: grid;
+  gap: .5rem;
+  grid-template-columns: 1fr 1fr;
+}
+
+.meta {
+  font-size: .75rem;
+  margin-block-start: .5rem;
+  margin-block-end: 1rem;
+}
+
+.delta-percent-bullish {
+  color: var(--color-positive);
+}
+
+.delta-percent-bearish {
+  color: var(--color-negative);
+}
+
+.delta-percent-bullish,
+.delta-percent-bearish {
+  font-weight: 700;
+}
+
+.quotes-bullish,
+.quotes-bearish {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.quotes-scroller {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  display: grid;
+  gap: .5rem;
+  @include mixins.scrollbars();
+}
+</style>

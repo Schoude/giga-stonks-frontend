@@ -3,6 +3,7 @@ import NavigationPage from '../components/NavigationPage.astro';
 import MarketNews from '../components/news/MarketNews.astro';
 import NewsSentiment from '../components/news/NewsSentiment.astro';
 import QuotesDJIA from '../components/quotes/QuotesDJIA.astro';
+import QuotesNASDAQ from '../components/quotes/QuotesNASDAQ.astro';
 import Layout from "../layouts/Layout.astro";
 import type { MarketStatus } from '../types/market-status';
 
@@ -16,7 +17,7 @@ const marketStatusUS = marketStatus.find(status => status.region === "United Sta
       <NavigationPage />
       <div class="markets">
         <QuotesDJIA openStatus={marketStatusUS?.current_status ?? 'closed'}/>
-        <QuotesDJIA openStatus={marketStatusUS?.current_status ?? 'closed'}/>
+        <QuotesNASDAQ openStatus={marketStatusUS?.current_status ?? 'closed'}/>
       </div>
     </div>
     <div class="col">
