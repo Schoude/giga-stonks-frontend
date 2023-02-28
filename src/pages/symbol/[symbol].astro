@@ -4,7 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 
 const { symbol } = Astro.params;
 
-const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/company-profile/djia${symbol}`)).json();
+const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/company-profile/${symbol}`)).json();
 ---
 
 <Layout title="Giga Stonks - Overview">
