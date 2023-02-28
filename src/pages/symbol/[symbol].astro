@@ -1,10 +1,13 @@
 ---
 import NavigationPage from '../../components/NavigationPage.astro';
 import Layout from "../../layouts/Layout.astro";
+import { getISODate, ISODateToJSDate } from '../../utils';
 
 const { symbol } = Astro.params;
+const date = ISODateToJSDate(getISODate());
 
 const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/company-profile/${symbol}`)).json();
+const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/social-sentiment?symbol=${symbol}&time_from=${date}`)).json();
 ---
 
 <Layout title="Giga Stonks - Overview">
@@ -21,7 +24,83 @@ const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs
       <p>{companyProfile.ticker}</p>
       <p>{companyProfile.weburl}</p>
     </div>
+
+    <div class="social-sentiments">
+      <h2>Social Sentiments</h2>
+      <div class="social-provider">
+        <img class="logo-social" src="/images/reddit-logo.png" alt="Reddit Logo">
+        <div class="inner">
+          {socialSentiment.reddit.map(entry => (
+            <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
+              <div class="time">{new Date(entry.atTime).toLocaleString()}</div>
+              <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
+              <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
+              <div class="score">Score: {entry.score}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="social-provider">
+        <img class="logo-social" src="/images/twitter-logo.svg" alt="Twitter Logo">
+        <div class="inner">
+          {socialSentiment.twitter.map(entry => (
+            <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
+              <div class="time">{new Date(entry.atTime).toLocaleString()}</div>
+              <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
+              <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
+              <div class="score">Score: {entry.score}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   </main>
 </Layout>
 
-<style></style>
+<style lang="scss">
+@use '../../styles/mixins';
+
+.social-provider {
+  font-weight: 300;
+
+  & + & {
+    margin-block-start: 2rem;
+  }
+}
+
+.inner {
+  display: flex;
+  max-inline-size: 1200px;
+  gap: 1rem;
+  margin-block: 1rem;
+  overflow: auto;
+  @include mixins.scrollbars();
+}
+
+.entry-sentiment {
+  min-inline-size: fit-content;
+  padding: 1rem;
+
+  &.positive {
+    background-color: #0d1f23;
+  }
+
+  &.negative {
+    background-color: #281717;
+  }
+}
+
+.logo-social {
+  inline-size: 35px;
+}
+
+.time,
+.score {
+  font-weight: 700;
+}
+
+.score {
+  font-size: 1.125rem;
+}
+</style>
