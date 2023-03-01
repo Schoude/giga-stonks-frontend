@@ -1,4 +1,5 @@
 ---
+import ImageGigaStonksSplash from './ImageGigaStonksSplash.astro';
 import Logo from './Logo.astro';
 
 ---
@@ -7,9 +8,17 @@ import Logo from './Logo.astro';
   <a class:list={['link-home']} href="/" title="Giga Stonks Home">
     <Logo />
   </a>
+  <a class:list={['link-about']} href="/about">About</a>
 </nav>
 
 <style lang="scss">
+.navigation-page {
+  display: flex;
+  margin-block-end: .5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .link-home {
   display: inline-block;
 }

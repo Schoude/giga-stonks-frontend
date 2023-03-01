@@ -13,7 +13,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
 ---
 
 <Layout title={`Giga Stonks | Stock Details for ${companyProfile.name}`}>
-  <main class:list={['content-grid']}>
+  <main class:list={['stock-details', 'content-grid']}>
     <div class="col-flex">
       <NavigationPage />
       <div class="col-flex-inner">

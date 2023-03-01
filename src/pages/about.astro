@@ -1,0 +1,33 @@
+---
+import ImageGigaStonksSplash from '../components/ImageGigaStonksSplash.astro';
+import NavigationPage from '../components/NavigationPage.astro';
+import Layout from "../layouts/Layout.astro";
+
+---
+
+<Layout title="Giga Stonks | About">
+  <main class="about">
+    <NavigationPage />
+    <div class="inner">
+      <ImageGigaStonksSplash />
+    </div>
+  </main>
+</Layout>
+
+<style lang="scss">
+.about {
+  block-size: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.inner {
+  display: grid;
+  place-items: center;
+  flex: 1;
+}
+
+:global(.navigation-page) {
+  max-inline-size: 624px;
+}
+</style>
