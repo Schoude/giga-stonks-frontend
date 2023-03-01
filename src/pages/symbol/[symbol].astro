@@ -32,7 +32,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
         <div class="inner">
           {socialSentiment.reddit.map(entry => (
             <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
-              <div class="time">{new Date(entry.atTime).toLocaleString()}</div>
+              <div class="time">{entry.atTime}</div>
               <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
               <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
               <div class="score">Score: {entry.score}</div>
@@ -46,7 +46,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
         <div class="inner">
           {socialSentiment.twitter.map(entry => (
             <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
-              <div class="time">{new Date(entry.atTime).toLocaleString()}</div>
+              <div class="time">{entry.atTime}</div>
               <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
               <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
               <div class="score">Score: {entry.score}</div>
@@ -55,6 +55,9 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
         </div>
       </div>
     </div>
+    <!-- TODO: Add Stock Sentiment News -->
+    <!-- TODO: Add Company News -->
+    <!-- TODO: Intraday time series (5 or 15 mins) -->
   </main>
 </Layout>
 
