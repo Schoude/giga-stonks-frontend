@@ -11,7 +11,7 @@ const marketStatus = await (await fetch('https://giga-stonks-api.shuttleapp.rs/a
 const marketStatusUS = marketStatus.find(status => status.region === "United States") as MarketStatus;
 ---
 
-<Layout title="Giga Stonks - Overview">
+<Layout title="Giga Stonks | Overview">
   <main class="markets-overview">
     <div class="col col-markets">
       <NavigationPage />

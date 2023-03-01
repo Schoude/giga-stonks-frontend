@@ -4,12 +4,19 @@ import { getISODate } from '../../utils';
 import ArticleNewsSentiment from './articles/ArticleNewsSentiment.astro';
 import type { NewsSentiments } from '../../types/news-sentiments';
 
-const newsSentiments = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/news-sentiment?time_from=${getISODate()}`)).json() as NewsSentiments;
+export interface Props {
+  name: string;
+  ticker: string;
+}
+
+const {name, ticker} = Astro.props;
+
+const newsSentiments = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/news-sentiment-ticker?ticker=${ticker}&time_from=${getISODate()}`)).json() as NewsSentiments;
 ---
 
 <Container outlined={true} class="news-sentiment news-container">
   <header>
-    <h2>News Sentiment</h2>
+    <h2>Sentiment News for {name}</h2>
     <hr>
   </header>
   <div class="articles">
