@@ -1,6 +1,21 @@
+/**
+ * Gets yesterday's date as ISO string.
+ *
+ * @example 20230301
+ */
 export function getISODate() {
   const date = new Date();
   date.setDate(date.getDate() - 1);
+  return date.toISOString().slice(0, 10).replace(/-/g, "");
+}
+
+/**
+ * Gets today's date as ISO string.
+ *
+ * @example 20230301
+ */
+export function getISODateToday() {
+  const date = new Date();
   return date.toISOString().slice(0, 10).replace(/-/g, "");
 }
 

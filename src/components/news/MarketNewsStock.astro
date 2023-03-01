@@ -1,0 +1,37 @@
+---
+import Container from "../container/Container.astro";
+import ArticleMarketNews from './articles/ArticleMarketNews.astro';
+import type { MarketNewsArticle } from './articles/ArticleMarketNews.astro';
+import { getISODate, getISODateToday, ISODateToJSDate } from '../../utils';
+
+export interface Props {
+  name: string;
+  ticker: string;
+}
+
+const {name, ticker} = Astro.props;
+const marketNewsStock = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/company-news?symbol=${ticker}&time_from=${ISODateToJSDate(getISODate())}&time_to=${ISODateToJSDate(getISODateToday())}`)).json() as MarketNewsArticle[];
+---
+
+<Container outlined={true} class="market-news news-container">
+  <header>
+    <h2>Market News for {name}</h2>
+    <hr>
+    <p class="article-count">{marketNewsStock.length} Articles</p>
+  </header>
+  <div class="articles">
+    {marketNewsStock.map(article => (<ArticleMarketNews article={article}/>))}
+  </div>
+</Container>
+
+<style lang="scss">
+hr {
+  border-style: solid;
+  border-color: var(--color-accent);
+}
+
+.article-count {
+  text-align: end;
+  margin-block: 1rem;
+}
+</style>
