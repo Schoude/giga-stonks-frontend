@@ -30,7 +30,9 @@ const {companyProfile} = Astro.props;
   <dl class="profile">
     <dt>Ticker</dt>
     <dd>
-      {companyProfile.ticker}
+      <a href={`https://www.google.com/search?q=${companyProfile.ticker.toLowerCase()}+stock`} target="_blank" rel="noopener">
+        {companyProfile.ticker}
+      </a>
     </dd>
 
     <dt>Country</dt>

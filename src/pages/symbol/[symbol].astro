@@ -1,16 +1,15 @@
 ---
 import CompanyProfile from '../../components/detail/CompanyProfile.astro';
+import SocialSentiments from '../../components/detail/SocialSentiments.astro';
 import NavigationPage from '../../components/NavigationPage.astro';
 import MarketNewsStock from '../../components/news/MarketNewsStock.astro';
 import NewsSentimentStock from '../../components/news/NewsSentimentStock.astro';
 import Layout from "../../layouts/Layout.astro";
-import { getISODate, ISODateToJSDate } from '../../utils';
 
 const { symbol } = Astro.params;
-const date = ISODateToJSDate(getISODate());
+
 
 const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/company-profile/${symbol}`)).json();
-const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/social-sentiment?symbol=${symbol}&time_from=${date}`)).json();
 ---
 
 <Layout title={`Giga Stonks | Stock Details for ${companyProfile.name}`}>
@@ -27,37 +26,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
       <div class="col-row">
         <MarketNewsStock name={companyProfile.name} ticker={companyProfile.ticker} />
       </div>
-
-      <div class="social-sentiments">
-        <h2>Social Sentiments</h2>
-        <div class="social-provider">
-          <img class="logo-social" src="/images/reddit-logo.png" alt="Reddit Logo">
-          <div class="inner">
-            {socialSentiment.reddit.map(entry => (
-              <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
-                <div class="time">{entry.atTime}</div>
-                <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
-                <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
-                <div class="score">Score: {entry.score}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div class="social-provider">
-          <img class="logo-social" src="/images/twitter-logo.svg" alt="Twitter Logo">
-          <div class="inner">
-            {socialSentiment.twitter.map(entry => (
-              <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
-                <div class="time">{entry.atTime}</div>
-                <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
-                <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
-                <div class="score">Score: {entry.score}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <SocialSentiments symbol={symbol!} />
     </div>
 
     <!-- TODO: Move Stuff into Components -->
@@ -66,8 +35,6 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
 </Layout>
 
 <style lang="scss">
-@use '../../styles/mixins';
-
 .content-grid {
   display: flex;
   gap: 1rem;
@@ -97,52 +64,5 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
     overflow: hidden;
     flex: 1;
   }
-}
-
-.social-sentiments {
-  inline-size: 100%;
-  overflow: hidden;
-}
-
-.social-provider {
-  font-weight: 300;
-
-  & + & {
-    margin-block-start: 2rem;
-  }
-}
-
-.inner {
-  display: flex;
-  gap: 1rem;
-  margin-block: 1rem;
-  overflow: auto;
-  @include mixins.scrollbars();
-}
-
-.entry-sentiment {
-  min-inline-size: fit-content;
-  padding: 1rem;
-
-  &.positive {
-    background-color: #0d1f23;
-  }
-
-  &.negative {
-    background-color: #281717;
-  }
-}
-
-.logo-social {
-  inline-size: 35px;
-}
-
-.time,
-.score {
-  font-weight: 700;
-}
-
-.score {
-  font-size: 1.125rem;
 }
 </style>

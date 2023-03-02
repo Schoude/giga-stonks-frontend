@@ -1,0 +1,40 @@
+---
+import type { SocialSentiments } from '../../types/social-sentiments';
+import { getISODate, ISODateToJSDate } from '../../utils';
+import SocialSentimentProvider from './SocialSentimentProvider.astro';
+
+export interface Props {
+  symbol: string;
+}
+
+const {symbol} = Astro.props;
+
+const date = ISODateToJSDate(getISODate());
+
+const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/social-sentiment?symbol=${symbol}&time_from=${date}`)).json() as SocialSentiments;
+---
+<div class="social-sentiments">
+  <h2>Social Sentiments</h2>
+  <SocialSentimentProvider
+    socialSentiment={socialSentiment.reddit}
+    publicImagePath="/images/reddit-logo.png"
+  />
+  <SocialSentimentProvider
+    socialSentiment={socialSentiment.twitter}
+    publicImagePath="/images/twitter-logo.svg"
+  />
+</div>
+
+<style lang="scss">
+@use '../../styles/mixins';
+
+.social-sentiments {
+  inline-size: 100%;
+  overflow-y: auto;
+  @include mixins.scrollbars();
+
+  h2 {
+    margin-block-end: 1rem;
+  }
+}
+</style>

@@ -1,0 +1,70 @@
+---
+import type { SocialSentimentItem } from '../../types/social-sentiments';
+
+export interface Props {
+  publicImagePath: string;
+  socialSentiment: SocialSentimentItem[];
+}
+
+const {socialSentiment, publicImagePath} = Astro.props;
+---
+
+<div class="social-sentiment-provider">
+  <img class="logo-social" src={publicImagePath} alt="Reddit Logo">
+  <div class="inner">
+    {socialSentiment.map(entry => (
+      <div class:list={['entry-sentiment', {positive: Number(entry.score) > 0, negative: Number(entry.score) < 0}]}>
+        <div class="time">{entry.atTime}</div>
+        <div class="mention-positive">Positive mentions: {entry.positiveMention}</div>
+        <div class="mention-negative">Negative mentions: {entry.negativeMention}</div>
+        <div class="score">Score: {entry.score}</div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style lang="scss">
+@use '../../styles/mixins';
+
+.social-sentiment-provider {
+  font-weight: 300;
+
+  & + & {
+    margin-block-start: 1rem;
+  }
+}
+
+.inner {
+  display: flex;
+  gap: 1rem;
+  margin-block: 1rem;
+  overflow: auto;
+  @include mixins.scrollbars();
+}
+
+.entry-sentiment {
+  min-inline-size: fit-content;
+  padding: 1rem;
+
+  &.positive {
+    background-color: #0d1f23;
+  }
+
+  &.negative {
+    background-color: #281717;
+  }
+}
+
+.logo-social {
+  inline-size: 35px;
+}
+
+.time,
+.score {
+  font-weight: 700;
+}
+
+.score {
+  font-size: 1.125rem;
+}
+</style>
