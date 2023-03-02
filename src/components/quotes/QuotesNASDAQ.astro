@@ -9,15 +9,18 @@ export interface Props {
   openStatus: 'closed' | 'open';
 }
 
-const quotesNASDAQ: QuotesData = {
-  avg_percentage_gains: 0.0,
-  avg_percentage_losses: -0.0,
-  gainers: [],
-  losers: [],
-  rate_limit_remaining: 0,
-  rate_limit_reset: 1677446340,
-  sentiment: "bearish",
-};
+// const quotesNASDAQ: QuotesData = {
+//   avg_percentage_gains: 0.0,
+//   avg_percentage_losses: -0.0,
+//   gainers: [],
+//   losers: [],
+//   rate_limit_remaining: 0,
+//   rate_limit_reset: 1677446340,
+//   sentiment: "bearish",
+// };
+// const stocksCount = quotesNASDAQ.gainers.length + quotesNASDAQ.losers.length;
+
+const quotesNASDAQ = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/nasdaq')).json() as QuotesData;
 const stocksCount = quotesNASDAQ.gainers.length + quotesNASDAQ.losers.length;
 
 const {openStatus} = Astro.props;
@@ -25,7 +28,7 @@ const {openStatus} = Astro.props;
 <Container class={'quotes-nasdaq'}>
   <header>
     <h2 class:list={['quotes-title', openStatus]}><i class="dot"/>NASDAQ<IconArrow class={quotesNASDAQ.sentiment}/></h2>
-    <button type="button" class="btn-reload" title="Reload data"><IconRotate /></button>
+    <!-- <button type="button" class="btn-reload" title="Reload data"><IconRotate /></button> -->
   </header>
   <div class="quotes-lists">
     <div class="quotes-bullish">

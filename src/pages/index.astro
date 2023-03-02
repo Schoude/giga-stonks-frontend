@@ -16,8 +16,8 @@ const marketStatusUS = marketStatus.find(status => status.region === "United Sta
     <div class="col col-markets">
       <NavigationPage />
       <div class="markets">
-        <QuotesDJIA openStatus={marketStatusUS?.current_status ?? 'closed'}/>
         <QuotesNASDAQ openStatus={marketStatusUS?.current_status ?? 'closed'}/>
+        <QuotesDJIA openStatus={marketStatusUS?.current_status ?? 'closed'}/>
       </div>
     </div>
     <div class="col">

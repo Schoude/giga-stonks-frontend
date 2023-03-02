@@ -8,8 +8,19 @@ export interface Props {
   openStatus: 'closed' | 'open';
 }
 
-const quotesDJIA = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json() as QuotesData;
+const quotesDJIA: QuotesData = {
+  avg_percentage_gains: 0.0,
+  avg_percentage_losses: -0.0,
+  gainers: [],
+  losers: [],
+  rate_limit_remaining: 0,
+  rate_limit_reset: 1677446340,
+  sentiment: "bearish",
+};
 const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
+
+// const quotesDJIA = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json() as QuotesData;
+// const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
 
 const {openStatus} = Astro.props;
 ---

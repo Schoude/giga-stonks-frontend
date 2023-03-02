@@ -17,7 +17,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
     <div class="col-flex">
       <NavigationPage />
       <div class="col-flex-inner">
-        <div>
+        <div class:list={['company-profile']}>
           <p>{companyProfile.country}</p>
           <p>{companyProfile.currency}</p>
           <p>{companyProfile.exchange}</p>
@@ -69,7 +69,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
       </div>
     </div>
 
-    <!-- TODO: Move Stuff into Components -->;
+    <!-- TODO: Move Stuff into Components -->
     <!-- TODO: Intraday time series (5 or 15 mins) -->
   </main>
 </Layout>
