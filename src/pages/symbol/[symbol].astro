@@ -1,4 +1,5 @@
 ---
+import CompanyProfile from '../../components/detail/CompanyProfile.astro';
 import NavigationPage from '../../components/NavigationPage.astro';
 import MarketNewsStock from '../../components/news/MarketNewsStock.astro';
 import NewsSentimentStock from '../../components/news/NewsSentimentStock.astro';
@@ -17,17 +18,7 @@ const socialSentiment = await (await fetch(`https://giga-stonks-api.shuttleapp.r
     <div class="col-flex">
       <NavigationPage />
       <div class="col-flex-inner">
-        <div class:list={['company-profile']}>
-          <p>{companyProfile.country}</p>
-          <p>{companyProfile.currency}</p>
-          <p>{companyProfile.exchange}</p>
-          <p>{companyProfile.finnhubIndustry}</p>
-          <p>{companyProfile.ipo}</p>
-          <p><img src={companyProfile.logo} alt={`Logo ${companyProfile.name}`}></p>
-          <p>{companyProfile.name}</p>
-          <p>{companyProfile.ticker}</p>
-          <p>{companyProfile.weburl}</p>
-        </div>
+        <CompanyProfile companyProfile={companyProfile} />
         <NewsSentimentStock name={companyProfile.name} ticker={companyProfile.ticker} />
     </div>
     </div>

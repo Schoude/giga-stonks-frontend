@@ -1,0 +1,86 @@
+---
+import Container from '../container/Container.astro';
+
+interface CompanyProfile {
+  country: string;
+  currency: string;
+  exchange: string;
+  finnhubIndustry: string;
+  ipo: string;
+  logo: string;
+  name: string;
+  ticker: string;
+  weburl: string;
+}
+
+export interface Props {
+  companyProfile: CompanyProfile;
+}
+
+const {companyProfile} = Astro.props;
+---
+<Container class={'company-profile'} outlined>
+  <a class="name" href={companyProfile.weburl} title={`${companyProfile.name} Company Homepage`} target="_blank" rel="noopener">
+    <img src={companyProfile.logo} alt={`Logo ${companyProfile.name}`}>
+    <h1>
+      {companyProfile.name}
+    </h1>
+  </a>
+
+  <dl class="profile">
+    <dt>Ticker</dt>
+    <dd>
+      {companyProfile.ticker}
+    </dd>
+
+    <dt>Country</dt>
+    <dd>
+      {companyProfile.country}
+    </dd>
+
+    <dt>Exchange</dt>
+    <dd>
+      {companyProfile.exchange}
+    </dd>
+
+    <dt>Industrie</dt>
+    <dd>
+      {companyProfile.finnhubIndustry}
+    </dd>
+
+    <dt>IPO Date</dt>
+    <dd>
+      {new Date(companyProfile.ipo).toLocaleDateString()}
+    </dd>
+  </dl>
+</Container>
+
+<style lang="scss">
+.name {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  &:any-link {
+    text-decoration: none;
+  }
+
+  img {
+    display: inline;
+    aspect-ratio: 1 / 1;
+    inline-size: 38px;
+  }
+}
+
+.profile {
+  font-weight: 300;
+  margin-block-start: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: .5rem;
+
+  dd {
+    font-weight: 700;
+  }
+}
+</style>
