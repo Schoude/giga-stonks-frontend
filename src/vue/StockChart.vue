@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue';
 import type { Candle, FHCandles, IntervalValues} from '../types/stock-chart';
 import { getInterval, collectCandleData } from '../utils';
+import StockChartRenderer from './StockChartRenderer.vue';
 
 const props = defineProps<{
   symbol: string;
@@ -14,6 +15,16 @@ const chartSetup = reactive<{
   data: [],
 });
 
+const factor = 1;
+const width = 1270 * factor;
+const height = 450 * factor;
+const margin = {
+  top: 0,
+  right: 65,
+  bottom: 25,
+  left: 50,
+};
+
 const {from, to} = getInterval(props.interval);
 
 const CANDLES = ref<FHCandles | null>(null);
@@ -23,7 +34,12 @@ chartSetup.data = collectCandleData(CANDLES.value);
 </script>
 
 <template>
-
+  <StockChartRenderer
+    :data="chartSetup.data"
+    :height="height"
+    :width="width"
+    :margin="margin"
+  />
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>
