@@ -47,15 +47,15 @@ const {openStatus} = Astro.props;
 </Container>
 
 <script lang="ts">
-  const btnReload = document.querySelector('.btn-reload');
+  // const btnReload = document.querySelector('.btn-reload');
 
-  async function fetchData() {
-    console.log('fetchData');
-    const quotes = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/nasdaq')).json());
-    console.log({quotes});
-  }
+  // async function fetchData() {
+  //   console.log('fetchData');
+  //   const quotes = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/nasdaq')).json());
+  //   console.log({quotes});
+  // }
 
-  btnReload.addEventListener('click', fetchData);
+  // btnReload.addEventListener('click', fetchData);
 </script>
 
 <style lang="scss">

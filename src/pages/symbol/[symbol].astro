@@ -23,13 +23,12 @@ const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs
     </div>
 
     <div class="col">
-      <div class="col-row">
+      <div class="col-row grid-col-2">
         <MarketNewsStock name={companyProfile.name} ticker={companyProfile.ticker} />
+        <SocialSentiments symbol={symbol!} />
       </div>
-      <SocialSentiments symbol={symbol!} />
     </div>
 
-    <!-- TODO: Move Stuff into Components -->
     <!-- TODO: Intraday time series (5 or 15 mins) -->
   </main>
 </Layout>
@@ -63,6 +62,11 @@ const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs
   :global(.container) {
     overflow: hidden;
     flex: 1;
+  }
+
+  .grid-col-2 {
+    display: grid;
+    grid-template-columns: auto 1fr;
   }
 }
 </style>
