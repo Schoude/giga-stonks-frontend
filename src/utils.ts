@@ -101,6 +101,20 @@ export function getInterval(interval: IntervalValues): { from: number; to: numbe
         to,
       }
     }
+
+    case 'week': {
+      now.setHours(23, 59, 59, 0);
+      const fromday = new Date(now);
+      fromday.setDate(fromday.getDate() - 7);
+      fromday.setHours(0, 0, 0, 0);
+      const from = fromday.getTime() / 1000;
+      const to = now.getTime() / 1000;
+
+      return {
+        from,
+        to,
+      }
+    }
   }
 }
 
