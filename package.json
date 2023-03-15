@@ -10,10 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/deno": "^4.0.2",
-    "astro": "^2.0.15"
+    "@astrojs/deno": "^4.1.0",
+    "astro": "^2.1.3"
   },
   "devDependencies": {
-    "sass": "^1.58.3"
+    "sass": "^1.59.3"
   }
 }
