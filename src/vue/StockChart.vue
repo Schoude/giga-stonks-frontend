@@ -31,13 +31,16 @@ const factor = 1;
 const width = 1270 * factor;
 const height = 425 * factor;
 const margin = {
-  top: 0,
+  top: 10,
   right: 65,
   bottom: 25,
   left: 60,
 };
 
 const CANDLES = ref<FHCandles | null>(null);
+const currentPrice = computed(() => chartSetup.data.at(-1)!.c.toFixed(2));
+const deltaPercent = computed(() => ((chartSetup.data.at(-1)!.c / chartSetup.data[0].c - 1) * 100).toFixed(2));
+const deltaAbsolute = computed(() => (chartSetup.data.at(-1)!.c - chartSetup.data[0].c).toFixed(2));
 
 watchEffect(async () => {
   const {from, to} = getInterval(interval.value);
@@ -47,8 +50,15 @@ watchEffect(async () => {
 </script>
 
 <template>
-  <div class="interactions">
-    <div class="intervals">
+  <header class="header">
+    <section class="meta">
+      <h2 class="current-price">${{ currentPrice }}</h2>
+      &nbsp;
+      <small class="deltas">
+        (<span class="percent">{{ deltaPercent }}%</span> / <span class="absolute">${{ deltaAbsolute }}</span>)
+      </small>
+    </section>
+    <section class="intervals">
       <button
         class="btn-interval"
         :disabled="isIntervalActive('week')"
@@ -97,8 +107,8 @@ watchEffect(async () => {
       >
         M-30
       </button>
-    </div>
-  </div>
+    </section>
+  </header>
   <StockChartRenderer
     v-if="chartSetup.data[0].c > 0"
     :data="chartSetup.data"
@@ -109,6 +119,25 @@ watchEffect(async () => {
 </template>
 
 <style lang="scss" scoped>
+header,
+.meta {
+  display: flex;
+  align-items: center;
+}
+
+header {
+  gap: 1rem;
+}
+
+.meta {
+  min-inline-size: 150px;
+}
+
+.current-price {
+  margin: 0;
+  font-size: 1rem;
+}
+
 .intervals {
   display: flex;
   gap: .5rem;
