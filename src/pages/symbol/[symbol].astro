@@ -1,13 +1,14 @@
 ---
+import { Suspense } from 'vue';
 import CompanyProfile from '../../components/detail/CompanyProfile.astro';
 import SocialSentiments from '../../components/detail/SocialSentiments.astro';
 import NavigationPage from '../../components/NavigationPage.astro';
 import MarketNewsStock from '../../components/news/MarketNewsStock.astro';
 import NewsSentimentStock from '../../components/news/NewsSentimentStock.astro';
 import Layout from "../../layouts/Layout.astro";
+import StockChartLoader from '../../vue/StockChartLoader.vue';
 
 const { symbol } = Astro.params;
-
 
 const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs/api/v1/company-profile/${symbol}`)).json();
 ---
@@ -27,9 +28,11 @@ const companyProfile = await (await fetch(`https://giga-stonks-api.shuttleapp.rs
         <MarketNewsStock name={companyProfile.name} ticker={companyProfile.ticker} />
         <SocialSentiments symbol={symbol!} />
       </div>
-    </div>
 
-    <!-- TODO: Intraday time series (5 or 15 mins) -->
+      <div class="col-row">
+        <StockChartLoader client:only symbol={symbol as string} />
+      </div>
+    </div>
   </main>
 </Layout>
 
