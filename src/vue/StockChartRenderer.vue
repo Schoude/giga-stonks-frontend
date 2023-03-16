@@ -110,6 +110,7 @@ const svgDOMString = computed(() => {
         .y(d => yScale(d.c))
         .curve(curveLinear)(props.data)
     )
+    .attr('stroke-width', '1.5')
     .attr('stroke', props.data[0].c > props.data.at(-1)!.c ? '#9e3d4f' : '#0e814b')
     .attr('stroke-linejoin', 'round')
     .attr('fill', 'none');

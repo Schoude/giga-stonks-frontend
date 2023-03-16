@@ -1,7 +1,8 @@
 <script setup lang='ts'>
-import { computed, reactive, ref, watchEffect } from 'vue';
+import { computed, reactive, ref, watch, watchEffect } from 'vue';
+import { useSocket } from '../composables/use-socket';
 import type { Candle, FHCandles, IntervalValues} from '../types/stock-chart';
-import { getInterval, collectCandleData } from '../utils';
+import { getInterval, collectCandleData, getHigher, getLower } from '../utils';
 import StockChartRenderer from './StockChartRenderer.vue';
 
 const props = defineProps<{
@@ -14,6 +15,8 @@ const isIntervalActive = computed(() => {
     return interval.value === givenInterval;
   }
 });
+const fetchLiveData = ref(false);
+const {subscribe, unsubscribe} = useSocket(onUpdate);
 const chartSetup = reactive<{
   data: Candle[];
 }>({
@@ -47,6 +50,40 @@ watchEffect(async () => {
   CANDLES.value = await (await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${props.symbol}&resolution=1&from=${from}&to=${to}&token=cfje729r01que34nv410cfje729r01que34nv41g`)).json() as FHCandles;
   chartSetup.data = collectCandleData(CANDLES.value);
 });
+
+function onUpdate({v, c, time}: { v: number; c: number; time: Date }) {
+  const lastTick = chartSetup.data.at(-1)!;
+  const lastTickMinute = lastTick.time.getMinutes();
+  const minuteToAdd = time.getMinutes();
+
+  const dataToAdd = {
+      c,
+      time,
+      v,
+      o: c,
+      h: c,
+      l: c
+    };
+
+  if (lastTickMinute < minuteToAdd) {
+    chartSetup.data.push(dataToAdd)
+    chartSetup.data.shift();
+  } else {
+    dataToAdd.v += lastTick.v;
+    dataToAdd.o = lastTick.o;
+    dataToAdd.h = getHigher(lastTick.h, dataToAdd.c);
+    dataToAdd.l = getLower(lastTick.l, dataToAdd.c);
+    chartSetup.data[chartSetup.data.length - 1] = dataToAdd;
+  }
+}
+
+watch(fetchLiveData, fetchData => {
+  if (fetchData === false) {
+    unsubscribe();
+  } else {
+    subscribe(props.symbol)
+  }
+});
 </script>
 
 <template>
@@ -60,6 +97,7 @@ watchEffect(async () => {
     </section>
     <section class="intervals">
       <button
+        type="button"
         class="btn-interval"
         :disabled="isIntervalActive('week')"
         title="Week"
@@ -68,6 +106,7 @@ watchEffect(async () => {
         W
       </button>
       <button
+        type="button"
         class="btn-interval"
         :disabled="isIntervalActive('days-2')"
         title="Two days"
@@ -76,6 +115,7 @@ watchEffect(async () => {
         D-2
       </button>
       <button
+        type="button"
         class="btn-interval"
         :disabled="isIntervalActive('days-1')"
         title="One day"
@@ -84,6 +124,7 @@ watchEffect(async () => {
         D-1
       </button>
       <button
+        type="button"
         class="btn-interval"
         :disabled="isIntervalActive('hours-3')"
         title="Three hours"
@@ -92,6 +133,7 @@ watchEffect(async () => {
         H-3
       </button>
       <button
+        type="button"
         class="btn-interval"
         :disabled="isIntervalActive('hours-1')"
         title="One hour"
@@ -100,6 +142,7 @@ watchEffect(async () => {
         H-1
       </button>
       <button
+        type="button"
         class="btn-interval"
         :disabled="isIntervalActive('minutes-30')"
         title="Thirty minutes"
@@ -108,6 +151,13 @@ watchEffect(async () => {
         M-30
       </button>
     </section>
+    <button
+      type="button"
+      class="btn-live-data"
+      @click="() => fetchLiveData = !fetchLiveData"
+    >
+      {{ fetchLiveData ? 'Stop Fetching Live Data' : 'Fetch Live Data' }}
+    </button>
   </header>
   <StockChartRenderer
     v-if="chartSetup.data[0].c > 0"
@@ -143,11 +193,16 @@ header {
   gap: .5rem;
 }
 
-.btn-interval {
+header button {
   border: none;
   padding: .25rem .5rem;
   line-height: 1;
   border-radius: var(--border-radius);
   background-color: #0b121d;
+}
+
+.btn-live-data {
+  display: inline-block;
+  margin-inline-start: auto;
 }
 </style>

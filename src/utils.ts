@@ -128,3 +128,11 @@ export function collectCandleData(data: FHCandles): Candle[] {
     time: new Date((timestamp) * 1000),
   }));
 }
+
+export function getLower(x: number, y: number) {
+  return x < y ? x : y;
+}
+
+export function getHigher(x: number, y: number) {
+  return x > y ? x : y;
+}
