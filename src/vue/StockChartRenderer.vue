@@ -13,7 +13,7 @@ import {
   max,
 } from 'd3';
 import { computed, ref } from 'vue';
-import type { Candle } from '../types/stock-chart';
+import { Candle, RenderTypeValues, RENDER_TYPE } from '../types/stock-chart';
 
 const props = defineProps<{
   data: Candle[];
@@ -25,6 +25,7 @@ const props = defineProps<{
     bottom: number;
     left: number;
   };
+  renderType: RenderTypeValues;
 }>();
 
 const innerWidth = ref(props.width - props.margin.left - props.margin.right);
@@ -101,22 +102,58 @@ const svgDOMString = computed(() => {
     .attr('transform', `translate(${innerWidth.value}, 0)`)
     .call(axisYRight);
 
-  // Line
-  svg
-    .select('.margin')
-    .append('g')
-    .attr('class', 'line')
-    .append('path')
-    .attr('d',
-      line<{time: Date; c: number}>()
-        .x(d => xScale(d.time))
-        .y(d => yScale(d.c))
-        .curve(curveLinear)(props.data)
-    )
-    .attr('stroke-width', '1.5')
-    .attr('stroke', props.data[0].c > props.data.at(-1)!.c ? '#9e3d4f' : '#0e814b')
-    .attr('stroke-linejoin', 'round')
-    .attr('fill', 'none');
+  if (props.renderType === RENDER_TYPE.LINE) {
+    // Line
+    svg
+      .select('.margin')
+      .append('g')
+      .attr('class', 'line')
+      .append('path')
+      .attr('d',
+        line<{time: Date; c: number}>()
+          .x(d => xScale(d.time))
+          .y(d => yScale(d.c))
+          .curve(curveLinear)(props.data)
+      )
+      .attr('stroke-width', '1.5')
+      .attr('stroke', props.data[0].c > props.data.at(-1)!.c ? '#9e3d4f' : '#0e814b')
+      .attr('stroke-linejoin', 'round')
+      .attr('fill', 'none');
+  } else {
+    // Candle Stick
+    const candles = svg
+      .select('.margin')
+      .append('g')
+      .attr('class', 'candle-sticks')
+      .selectAll('g')
+      .data(props.data)
+      .join('g')
+      .attr('class', 'candle')
+      .attr('transform', d => {
+        return `translate(${xScale(d.time)}, 0)`;
+      })
+
+    candles
+      .append('line')
+      .attr('class', 'whisker')
+      .attr('y1', d => yScale(d.l))
+      .attr('y2', d => yScale(d.h))
+      .attr('stroke-width', '0.5')
+      .attr('stroke', 'white');
+
+    candles
+      .append('line')
+      .attr('class', 'body')
+      .attr('y1', d => yScale(d.c))
+      .attr('y2', d => yScale(d.o))
+      .attr('stroke-linecap', 'round')
+      .attr('stroke-width', '4')
+      .attr('stroke', d => d.c > d.o ? '#0e814b' : '#9e3d4f'); // > red : green;
+
+    candles
+      .append('title')
+      .text(d => `Open: ${d.o}; Close: ${d.c}; High: ${d.h}; Low: ${d.l}`);
+  }
 
   // Volume
   svg

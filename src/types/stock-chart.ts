@@ -17,6 +17,7 @@ export interface Candle {
   time: Date;
 }
 
+
 export type ObjectValues<T> = T[keyof T];
 
 export const INTERVAL = {
@@ -29,3 +30,10 @@ export const INTERVAL = {
 } as const;
 
 export type IntervalValues = ObjectValues<typeof INTERVAL>;
+
+export const RENDER_TYPE = {
+  LINE: 'line',
+  CANDLES: 'candles',
+} as const;
+
+export type RenderTypeValues = ObjectValues<typeof RENDER_TYPE>;

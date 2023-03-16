@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, reactive, ref, watch, watchEffect } from 'vue';
 import { useSocket } from '../composables/use-socket';
-import type { Candle, FHCandles, IntervalValues} from '../types/stock-chart';
+import { Candle, FHCandles, IntervalValues, RenderTypeValues, RENDER_TYPE} from '../types/stock-chart';
 import { getInterval, collectCandleData, getHigher, getLower } from '../utils';
 import StockChartRenderer from './StockChartRenderer.vue';
 
@@ -17,6 +17,7 @@ const isIntervalActive = computed(() => {
 });
 const fetchLiveData = ref(false);
 const {subscribe, unsubscribe} = useSocket(onUpdate);
+const renderType = ref<RenderTypeValues>(RENDER_TYPE.LINE);
 const chartSetup = reactive<{
   data: Candle[];
 }>({
@@ -74,6 +75,14 @@ function onUpdate({v, c, time}: { v: number; c: number; time: Date }) {
     dataToAdd.h = getHigher(lastTick.h, dataToAdd.c);
     dataToAdd.l = getLower(lastTick.l, dataToAdd.c);
     chartSetup.data[chartSetup.data.length - 1] = dataToAdd;
+  }
+}
+
+function setRenderType() {
+  if (renderType.value === RENDER_TYPE.CANDLES) {
+    renderType.value = RENDER_TYPE.LINE;
+  } else {
+    renderType.value = RENDER_TYPE.CANDLES;
   }
 }
 
@@ -151,14 +160,23 @@ watch(fetchLiveData, fetchData => {
         M-30
       </button>
     </section>
-    <button
-      type="button"
-      class="btn-live-data"
-      :class="[{active: fetchLiveData}]"
-      @click="() => fetchLiveData = !fetchLiveData"
-    >
-      {{ fetchLiveData ? 'Stop Fetching Live Data' : 'Fetch Live Data' }}
-    </button>
+    <div class="interactions">
+      <button
+        type="button"
+        class="btn-render-type"
+        @click="setRenderType"
+      >
+        {{ renderType === RENDER_TYPE.LINE ? 'Draw Candle Chart' : 'Draw Line Chart' }}
+      </button>
+      <button
+        type="button"
+        class="btn-live-data"
+        :class="[{active: fetchLiveData}]"
+        @click="() => fetchLiveData = !fetchLiveData"
+      >
+        {{ fetchLiveData ? 'Stop Fetching Live Data' : 'Fetch Live Data' }}
+      </button>
+    </div>
   </header>
   <StockChartRenderer
     v-if="chartSetup.data[0].c > 0"
@@ -166,6 +184,7 @@ watch(fetchLiveData, fetchData => {
     :height="height"
     :width="width"
     :margin="margin"
+    :renderType="renderType"
   />
 </template>
 
@@ -202,10 +221,13 @@ header button {
   background-color: #0b121d;
 }
 
-.btn-live-data {
-  display: inline-block;
+.interactions {
   margin-inline-start: auto;
+  display: flex;
+  gap: .5rem;
+}
 
+.btn-live-data {
   &.active {
     background-color: #281717;
   }
