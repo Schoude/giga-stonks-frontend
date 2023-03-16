@@ -36,7 +36,7 @@ const height = 425 * factor;
 const margin = {
   top: 10,
   right: 50,
-  bottom: 25,
+  bottom: 35,
   left: 70,
 };
 
