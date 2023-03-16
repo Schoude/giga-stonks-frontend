@@ -35,9 +35,9 @@ const width = 1270 * factor;
 const height = 425 * factor;
 const margin = {
   top: 10,
-  right: 65,
+  right: 50,
   bottom: 25,
-  left: 60,
+  left: 70,
 };
 
 const CANDLES = ref<FHCandles | null>(null);

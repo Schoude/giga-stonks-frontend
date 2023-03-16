@@ -33,13 +33,15 @@ const innerHeightVolume = ref(innerHeight.value);
 
 const formatTime = timeFormat('%d %b, %H:%M');
 
+const yScaleDomainMargin = computed(() => Number(Math.abs((props.data[0].o - Math.abs(props.data.at(-1)!.o)) / 4).toFixed(4)));
+
 const svgDOMString = computed(() => {
   const yScale = scaleLinear()
   .domain([
       // @ts-expect-error
-      min(props.data.map(d => d.c)) - .5,
+      min(props.data.map(d => d.c)) - yScaleDomainMargin.value,
       // @ts-expect-error
-      max(props.data.map(d => d.c)) + .5
+      max(props.data.map(d => d.c)) + yScaleDomainMargin.value
     ])
     .range([innerHeight.value, 0]);
 
@@ -76,10 +78,9 @@ const svgDOMString = computed(() => {
     .call(axisX);
 
   // y axis left
-  const axisYLeft = axisLeft(yScale)
-    .tickFormat(d => `$${d}`)
-    .tickSize(-innerWidth.value)
-    .tickPadding(12);
+  const axisYLeft = axisLeft(scaleVolume)
+    .tickSize(0)
+    .tickPadding(6);
   svg
     .select('.margin')
     .append('g')
@@ -87,9 +88,11 @@ const svgDOMString = computed(() => {
     .call(axisYLeft);
 
   // y axis right
-  const axisYRight = axisRight(scaleVolume)
-    .tickSize(0)
-    .tickPadding(12);
+  const axisYRight = axisRight(yScale)
+    .tickFormat(d => `$${d}`)
+    .tickSize(-innerWidth.value)
+    .tickPadding(8);
+
 
   svg
     .select('.margin')
@@ -171,7 +174,7 @@ const svgDOMString = computed(() => {
       }
     }
 
-    .axis-y-left {
+    .axis-y-right {
       .tick {
         line {
           stroke: rgba(255, 255, 255, 0.1);
