@@ -154,6 +154,7 @@ watch(fetchLiveData, fetchData => {
     <button
       type="button"
       class="btn-live-data"
+      :class="[{active: fetchLiveData}]"
       @click="() => fetchLiveData = !fetchLiveData"
     >
       {{ fetchLiveData ? 'Stop Fetching Live Data' : 'Fetch Live Data' }}
@@ -204,5 +205,9 @@ header button {
 .btn-live-data {
   display: inline-block;
   margin-inline-start: auto;
+
+  &.active {
+    background-color: #281717;
+  }
 }
 </style>
