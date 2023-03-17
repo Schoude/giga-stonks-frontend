@@ -8,7 +8,10 @@ import Logo from './Logo.astro';
   <a class:list={['link-home']} href="/" title="Giga Stonks Home">
     <Logo />
   </a>
-  <a class:list={['link-about']} href="/about">About</a>
+  <div class="links">
+    <a class:list={['link-chart']} href="/chart">Chart</a>
+    <a class:list={['link-about']} href="/about">About</a>
+  </div>
 </nav>
 
 <style lang="scss">
@@ -17,6 +20,11 @@ import Logo from './Logo.astro';
   margin-block-end: .5rem;
   align-items: center;
   justify-content: space-between;
+}
+
+.links {
+  display: flex;
+  gap: .5rem;
 }
 
 .link-home {

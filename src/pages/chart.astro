@@ -1,0 +1,19 @@
+---
+import NavigationPage from '../components/NavigationPage.astro';
+import Layout from "../layouts/Layout.astro";
+import ChartContainer from '../vue/ChartContainer.vue';
+
+---
+
+<Layout title="Giga Stonks | Chart">
+  <header>
+    <NavigationPage />
+  </header>
+  <ChartContainer client:load />
+</Layout>
+
+<style lang="scss">
+:global(.navigation-page) {
+  max-inline-size: 624px;
+}
+</style>
