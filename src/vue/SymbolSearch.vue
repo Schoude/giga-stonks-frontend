@@ -20,14 +20,7 @@ async function onChange(event: Event) {
   if (loading.value) return;
   const target = event.target as HTMLInputElement;
   const value = target.value.trim();
-  console.log({value});
-
-
-  if (value == null) {
-    console.log('no value - return');
-
-    return;
-  }
+  if (value == null) return;
 
   loading.value = true;
   const {bestMatches} = await fetchMatchingSymbols(target.value);
@@ -50,14 +43,21 @@ function onClear() {
     >X</button>
   </div>
 
-  <ul class="found-symbols" v-if="foundSymbols.length > 0">
-    <li class="found-symbol"
-      v-for="symbol in foundSymbols"
-      :key="symbol['1. symbol']"
-    >
-      <span class="symbol">{{ symbol['1. symbol'] }}</span>
-      <span class="name">{{ symbol['2. name'] }}</span>
-    </li>
+  <ul class="found-symbols" :class="{populated: foundSymbols.length > 0}">
+    <template v-if="foundSymbols.length > 0">
+      <li class="found-symbol"
+        v-for="symbol in foundSymbols"
+        :key="symbol['1. symbol']"
+      >
+        <div class="col">
+          <div class="symbol">{{ symbol['1. symbol'] }}</div>
+          <div class="type">{{ symbol['3. type'] }}</div>
+        </div>
+        <div class="col col-name">
+          <span class="name">{{ symbol['2. name'] }}</span>
+        </div>
+      </li>
+    </template>
   </ul>
 </div>
 </template>
@@ -83,5 +83,35 @@ button {
   border-radius: var(--border-radius);
   background-color: #0b121d;
   outline: 1px solid var(--color-accent);
+}
+
+.found-symbols {
+  margin-top: .5rem;
+  list-style: none;
+  padding: 0;
+  border-radius: var(--border-radius);
+  opacity: 0;
+  transition: opacity 200ms ease;
+
+  &.populated {
+    opacity: 1;
+    outline: 1px solid var(--color-accent);
+  }
+}
+
+.found-symbol {
+  background-color: hsl(210, 38%, 16%);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  padding: .5rem .5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: hsl(210, 38%, 20%);
+  }
+
+  & + & {
+    border-block-start: 1px solid var(--color-accent);;
+  }
 }
 </style>
