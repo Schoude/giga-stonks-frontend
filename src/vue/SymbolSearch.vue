@@ -2,7 +2,7 @@
 import type { SymbolSearchResponse, SymbolSearchResponseEntry } from '../types/symbol-search';
 
 
-defineEmits<{
+const emit = defineEmits<{
   (event: 'symbol-selected', selectedSymbol: string): void
 }>();
 
@@ -32,6 +32,11 @@ function onClear() {
   input$.value!.value = '';
   foundSymbols.value = [];
 }
+
+function onSymbolSelect(symbol: string) {
+  emit('symbol-selected', symbol);
+  onClear();
+}
 </script>
 
 <template>
@@ -48,17 +53,21 @@ function onClear() {
 
   <ul class="found-symbols" :class="{populated: foundSymbols.length > 0}">
     <template v-if="foundSymbols.length > 0">
-      <li class="found-symbol"
+      <li
         v-for="symbol in foundSymbols"
         :key="symbol['1. symbol']"
       >
-        <div class="col">
-          <div class="symbol">{{ symbol['1. symbol'] }}</div>
-          <div class="type">{{ symbol['3. type'] }}</div>
-        </div>
-        <div class="col col-name">
-          <span class="name">{{ symbol['2. name'] }}</span>
-        </div>
+        <button class="found-symbol" type="button"
+          @click="onSymbolSelect(symbol['1. symbol'])"
+        >
+          <div class="col">
+            <div class="symbol">{{ symbol['1. symbol'] }}</div>
+            <div class="type">{{ symbol['3. type'] }}</div>
+          </div>
+          <div class="col col-name">
+            <span class="name">{{ symbol['2. name'] }}</span>
+          </div>
+        </button>
       </li>
     </template>
   </ul>
@@ -117,7 +126,14 @@ input {
   }
 }
 
+li {
+  display: flex;
+  flex-direction: column;
+}
+
 .found-symbol {
+  flex: 1;
+  border: none;
   background-color: hsl(210, 38%, 16%);
   display: grid;
   gap: 1.5rem;
