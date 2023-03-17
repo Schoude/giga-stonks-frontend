@@ -3,7 +3,7 @@ import type { SymbolSearchResponse, SymbolSearchResponseEntry } from '../types/s
 
 
 const emit = defineEmits<{
-  (event: 'symbol-selected', selectedSymbol: string): void
+  (event: 'symbol-selected', selectedSymbol: {name: string; symbol: string;}): void
 }>();
 
 const loading = ref(false);
@@ -33,8 +33,8 @@ function onClear() {
   foundSymbols.value = [];
 }
 
-function onSymbolSelect(symbol: string) {
-  emit('symbol-selected', symbol);
+function onSymbolSelect(symbol: SymbolSearchResponseEntry) {
+  emit('symbol-selected', {name: symbol['2. name'], symbol: symbol['1. symbol']});
   onClear();
 }
 </script>
@@ -58,7 +58,7 @@ function onSymbolSelect(symbol: string) {
         :key="symbol['1. symbol']"
       >
         <button class="found-symbol" type="button"
-          @click="onSymbolSelect(symbol['1. symbol'])"
+          @click="onSymbolSelect(symbol)"
         >
           <div class="col">
             <div class="symbol">{{ symbol['1. symbol'] }}</div>
