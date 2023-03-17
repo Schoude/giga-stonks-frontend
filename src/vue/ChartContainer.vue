@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
+import StockChart from './StockChart.vue';
 import SymbolSearch from './SymbolSearch.vue';
 
 const selectedSymbol = ref<null | {name: string; symbol: string;}>(null);
@@ -11,6 +12,13 @@ const selectedSymbol = ref<null | {name: string; symbol: string;}>(null);
   <section class="infos">
     <SymbolSearch  @symbol-selected="payload => selectedSymbol = payload"/>
     <h1 class="stock-name">{{ selectedSymbol?.name }}</h1>
+  </section>
+
+  <section class="chart">
+    <StockChart
+      v-if="selectedSymbol"
+      :symbol="selectedSymbol.symbol"
+    />
   </section>
 </main>
 </template>
@@ -30,5 +38,9 @@ const selectedSymbol = ref<null | {name: string; symbol: string;}>(null);
 .stock-name {
   font-size: 26px;
   align-self: end;
+}
+
+.chart {
+  margin-block-start: 2rem;
 }
 </style>
