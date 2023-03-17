@@ -24,7 +24,7 @@ async function onChange(event: Event) {
 
   loading.value = true;
   const {bestMatches} = await fetchMatchingSymbols(target.value);
-  foundSymbols.value = bestMatches.filter(match => match['4. region'] === 'United States');
+  foundSymbols.value = bestMatches.filter(match => match['4. region'] === 'United States' && match['3. type'] === 'Equity');
   loading.value = false;
 }
 
@@ -37,8 +37,11 @@ function onClear() {
 <template>
 <div class="symbol-search">
   <div class="input-wrapper">
-    <input ref="input$" type="text" @change="onChange">
-    <button class="clear" :disabled="input$?.value === ''"
+    <div>
+      <label for="symbol-input">Symbol Search</label>
+      <input id="symbol-input" ref="input$" type="text" placeholder="AAPL" title="Search for a US stock symbol" @change="onChange">
+    </div>
+    <button class="btn-clear" :disabled="input$?.value === ''"
       @click="onClear"
     >X</button>
   </div>
@@ -63,9 +66,19 @@ function onClear() {
 </template>
 
 <style lang='scss' scoped>
+.symbol-search {
+  margin-block-start: 1rem;
+  position: relative;
+}
+
 .input-wrapper {
   display: flex;
   gap: .5rem;
+
+  label {
+    display: block;
+    margin-block-end: .5rem;
+  }
 }
 
 input {
@@ -76,7 +89,9 @@ input {
   outline: 1px solid var(--color-accent);
 }
 
-button {
+.btn-clear {
+  align-self: end;
+  block-size: 26px;
   border: none;
   line-height: 1;
   padding: .25rem .5rem;
@@ -86,7 +101,10 @@ button {
 }
 
 .found-symbols {
-  margin-top: .5rem;
+  position: absolute;
+  inset-block-start: 100%;
+  margin: 0;
+  margin-block-start: .5rem;
   list-style: none;
   padding: 0;
   border-radius: var(--border-radius);
@@ -102,9 +120,11 @@ button {
 .found-symbol {
   background-color: hsl(210, 38%, 16%);
   display: grid;
+  gap: 1.5rem;
   grid-template-columns: auto 1fr;
   padding: .5rem .5rem;
   cursor: pointer;
+  min-inline-size: 400px;
 
   &:hover {
     background-color: hsl(210, 38%, 20%);
@@ -113,5 +133,10 @@ button {
   & + & {
     border-block-start: 1px solid var(--color-accent);;
   }
+}
+
+.col-name {
+  justify-self: center;
+  align-self: center;
 }
 </style>
