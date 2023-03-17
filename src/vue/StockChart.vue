@@ -7,6 +7,8 @@ import StockChartRenderer from './StockChartRenderer.vue';
 
 const props = defineProps<{
   symbol: string;
+  width?: number;
+  height?: number;
 }>();
 
 const interval = ref<IntervalValues>('days-1')
@@ -32,8 +34,8 @@ const chartSetup = reactive<{
 });
 
 const factor = 1;
-const width = 1270 * factor;
-const height = 425 * factor;
+const width = props.width ? props.width * factor : 1270 * factor;
+const height = props.height ? props.height * factor : 425 * factor;
 const margin = {
   top: 10,
   right: 50,

@@ -1,10 +1,15 @@
 <script setup lang='ts'>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import StockChart from './StockChart.vue';
 import SymbolSearch from './SymbolSearch.vue';
 
 const selectedSymbol = ref<null | {name: string; symbol: string;}>(null);
-
+const chartWidth = ref(0);
+const chartHeight = ref(0);
+onMounted(() => {
+  chartWidth.value = innerWidth;
+  chartHeight.value = innerHeight - 165;
+})
 </script>
 
 <template>
@@ -18,6 +23,8 @@ const selectedSymbol = ref<null | {name: string; symbol: string;}>(null);
     <StockChart
       v-if="selectedSymbol"
       :symbol="selectedSymbol.symbol"
+      :width="chartWidth"
+      :height="chartHeight"
     />
   </section>
 </main>
@@ -38,6 +45,7 @@ const selectedSymbol = ref<null | {name: string; symbol: string;}>(null);
 .stock-name {
   font-size: 26px;
   align-self: end;
+  margin-inline: auto;
 }
 
 .chart {
