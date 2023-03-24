@@ -2,6 +2,7 @@
 import type { QuotesData } from '../../types/quotes';
 import Container from '../container/Container.astro';
 import IconArrow from '../icons/IconArrow.astro';
+import IconRotate from '../icons/IconRotate.astro';
 import CardQuote from './CardQuote.astro';
 
 export interface Props {
@@ -19,13 +20,13 @@ const quotesDJIA: QuotesData = {
 };
 const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
 
-// const quotesDJIA = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json() as QuotesData;
-// const stocksCount = quotesDJIA.gainers.length + quotesDJIA.losers.length;
-
 const {openStatus} = Astro.props;
 ---
 <Container class={'quotes-djia'}>
-  <h2 class:list={['quotes-title', openStatus]}><i class="dot"/>Dow Jones<IconArrow class={quotesDJIA.sentiment}/></h2>
+  <header>
+    <h2 class:list={['quotes-title', openStatus]}><i class="dot"/>Dow Jones<IconArrow class={quotesDJIA.sentiment}/></h2>
+    <button type="button" class="btn-reload" title="Reload data"><IconRotate /></button>
+  </header>
   <div class="quotes-lists">
     <div class="quotes-bullish">
       <p class="meta">{quotesDJIA.gainers.length} / {stocksCount} Gainers <span class="delta-percent-bullish">+{quotesDJIA.avg_percentage_gains?.toFixed(2) ?? '+0.00'}%</span></p>
@@ -42,8 +43,26 @@ const {openStatus} = Astro.props;
   </div>
 </Container>
 
+<script lang="ts">
+const btnReload = document.querySelector('.btn-reload');
+
+async function fetchData() {
+  console.log('fetchData');
+  const quotes = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/djia')).json());
+  console.log({quotes});
+}
+
+btnReload.addEventListener('click', fetchData);
+</script>
+
 <style lang="scss">
 @use '../../styles/mixins';
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
 .quotes-djia {
   overflow: hidden;
@@ -71,6 +90,19 @@ const {openStatus} = Astro.props;
     .dot{
       background-color: var(--color-negative);
     }
+  }
+}
+
+.btn-reload {
+  border: none;
+  background-color: #0a111b;
+  border-radius: 50%;
+  block-size: 32px;
+  inline-size: 32px;
+  cursor: pointer;
+  display: none;
+  .icon-rotate {
+    fill: var(--color-text);
   }
 }
 

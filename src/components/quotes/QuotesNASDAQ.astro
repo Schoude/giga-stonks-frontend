@@ -2,23 +2,11 @@
 import type { QuotesData } from '../../types/quotes';
 import Container from '../container/Container.astro';
 import IconArrow from '../icons/IconArrow.astro';
-import IconRotate from '../icons/IconRotate.astro';
 import CardQuote from './CardQuote.astro';
 
 export interface Props {
   openStatus: 'closed' | 'open';
 }
-
-// const quotesNASDAQ: QuotesData = {
-//   avg_percentage_gains: 0.0,
-//   avg_percentage_losses: -0.0,
-//   gainers: [],
-//   losers: [],
-//   rate_limit_remaining: 0,
-//   rate_limit_reset: 1677446340,
-//   sentiment: "bearish",
-// };
-// const stocksCount = quotesNASDAQ.gainers.length + quotesNASDAQ.losers.length;
 
 const quotesNASDAQ = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/nasdaq')).json() as QuotesData;
 const stocksCount = quotesNASDAQ.gainers.length + quotesNASDAQ.losers.length;
@@ -28,7 +16,6 @@ const {openStatus} = Astro.props;
 <Container class={'quotes-nasdaq'}>
   <header>
     <h2 class:list={['quotes-title', openStatus]}><i class="dot"/>NASDAQ<IconArrow class={quotesNASDAQ.sentiment}/></h2>
-    <!-- <button type="button" class="btn-reload" title="Reload data"><IconRotate /></button> -->
   </header>
   <div class="quotes-lists">
     <div class="quotes-bullish">
@@ -45,18 +32,6 @@ const {openStatus} = Astro.props;
     </div>
   </div>
 </Container>
-
-<script lang="ts">
-  // const btnReload = document.querySelector('.btn-reload');
-
-  // async function fetchData() {
-  //   console.log('fetchData');
-  //   const quotes = await (await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/quotes/nasdaq')).json());
-  //   console.log({quotes});
-  // }
-
-  // btnReload.addEventListener('click', fetchData);
-</script>
 
 <style lang="scss">
 @use '../../styles/mixins';
@@ -93,19 +68,6 @@ header {
     .dot{
       background-color: var(--color-negative);
     }
-  }
-}
-
-.btn-reload {
-  border: none;
-  background-color: #0a111b;
-  border-radius: 50%;
-  block-size: 32px;
-  inline-size: 32px;
-  cursor: pointer;
-
-  .icon-rotate {
-    fill: var(--color-text);
   }
 }
 
