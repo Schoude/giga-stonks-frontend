@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, reactive, ref, watch, watchEffect } from 'vue';
 import { useSocket } from '../composables/use-socket';
-import { Candle, FHCandles, IntervalValues, RenderTypeValues, RENDER_TYPE} from '../types/stock-chart';
+import { Candle, FHCandles, intervalResolution, IntervalValues, RenderTypeValues, RENDER_TYPE} from '../types/stock-chart';
 import { getInterval, collectCandleData, getHigher, getLower } from '../utils';
 import StockChartRenderer from './StockChartRenderer.vue';
 
@@ -50,7 +50,8 @@ const deltaAbsolute = computed(() => (chartSetup.data.at(-1)!.c - chartSetup.dat
 
 watchEffect(async () => {
   const {from, to} = getInterval(interval.value);
-  CANDLES.value = await (await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${props.symbol}&resolution=1&from=${from}&to=${to}&token=cfje729r01que34nv410cfje729r01que34nv41g`)).json() as FHCandles;
+  const resolution = intervalResolution.get(interval.value);
+  CANDLES.value = await (await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${props.symbol}&resolution=${resolution}&from=${from}&to=${to}&token=cfje729r01que34nv410cfje729r01que34nv41g`)).json() as FHCandles;
   chartSetup.data = collectCandleData(CANDLES.value);
 });
 
@@ -93,6 +94,15 @@ watch(fetchLiveData, fetchData => {
     unsubscribe();
   } else {
     subscribe(props.symbol)
+  }
+});
+
+watch(() => props.symbol, newSymbol => {
+  if (fetchLiveData.value === false) {
+    unsubscribe();
+  } else  {
+    unsubscribe();
+    subscribe(newSymbol)
   }
 });
 </script>

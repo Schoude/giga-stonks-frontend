@@ -31,6 +31,17 @@ export const INTERVAL = {
 } as const;
 
 export type IntervalValues = ObjectValues<typeof INTERVAL>;
+export type IntervalResolution = '1' | '5' | '15' | '30' | '60' | 'D' | 'W' | 'M';
+
+export const intervalResolution = new Map<IntervalValues, IntervalResolution>([
+  ['week', '60'],
+  ['days-2', '15'],
+  ['days-1', '15'],
+  ['hours-6', '5'],
+  ['hours-3', '1'],
+  ['hours-1', '1'],
+  ['minutes-30', '1'],
+]);
 
 export const RENDER_TYPE = {
   LINE: 'line',
