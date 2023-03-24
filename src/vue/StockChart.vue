@@ -77,18 +77,11 @@ function onUpdate({v, c, time}: { v: number; c: number; time: Date }) {
     l: c
   };
 
-  console.log({lastTick: lastTick.time});
-  console.log({nextDataPoint});
-  console.log({dataToAdd: dataToAdd.time});
-
   if (nextDataPoint.getTime() < dataToAdd.time.getTime()) {
-    console.log('add data point');
-
     chartSetup.data.push(dataToAdd)
     chartSetup.data.shift();
     accumulatedVolume.value = 0;
   } else {
-    console.log('keep data point');
     dataToAdd.time = new Date(lastTick.time.setSeconds(0));
     dataToAdd.v += lastTick.v;
     dataToAdd.o = lastTick.o;
