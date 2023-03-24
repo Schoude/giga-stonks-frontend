@@ -171,7 +171,7 @@ const svgDOMString = computed(() => {
 
     candles
       .append('title')
-      .text(d => `Time: ${formatTime(d.time)}\nOpen: ${d.o}\nClose: ${d.c}\nHigh: ${d.h}\nLow: ${d.l}`);
+      .text(d => `Time: ${formatTime(d.time)}\nOpen: ${d.o}\nClose: ${d.c}\nHigh: ${d.h}\nLow: ${d.l}\nVol.: ${d.v}`);
   }
 
   return svg.node()?.outerHTML;

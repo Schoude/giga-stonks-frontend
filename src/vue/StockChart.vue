@@ -62,22 +62,32 @@ watchEffect(async () => {
 
 function onUpdate({v, c, time}: { v: number; c: number; time: Date }) {
   const lastTick = chartSetup.data.at(-1)!;
-  const lastTickMinute = lastTick.time.getMinutes();
-  const minuteToAdd = time.getMinutes();
+  const lastTickTime = new Date(chartSetup.data.at(-1)!.time);
+  lastTickTime.setMinutes(lastTickTime.getMinutes() + +resolution.value!)
+  lastTickTime.setSeconds(0);
+  const nextDataPoint = new Date(lastTickTime);
 
   const dataToAdd = {
-      c,
-      time,
-      v,
-      o: c,
-      h: c,
-      l: c
-    };
+    c,
+    time: new Date(time.setSeconds(0)),
+    v,
+    o: c,
+    h: c,
+    l: c
+  };
 
-  if (lastTickMinute < minuteToAdd) {
+  console.log({lastTick: lastTick.time});
+  console.log({nextDataPoint});
+  console.log({dataToAdd: dataToAdd.time});
+
+  if (nextDataPoint.getTime() < dataToAdd.time.getTime()) {
+    console.log('add data point');
+
     chartSetup.data.push(dataToAdd)
     chartSetup.data.shift();
   } else {
+    console.log('keep data point');
+    dataToAdd.time = new Date(lastTick.time.setSeconds(0));
     dataToAdd.v += lastTick.v;
     dataToAdd.o = lastTick.o;
     dataToAdd.h = getHigher(lastTick.h, dataToAdd.c);
