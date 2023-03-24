@@ -17,7 +17,6 @@ export interface Candle {
   time: Date;
 }
 
-
 export type ObjectValues<T> = T[keyof T];
 
 export const INTERVAL = {
