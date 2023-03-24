@@ -11,6 +11,7 @@ interface SocketTick {
 export function useSocket(onUpdate: (updateValue: { v: number; c: number; time: Date }) => void) {
   const socket = ref<WebSocket | null>(null);
   const symbol = ref();
+  const socketResolution = ref(1);
   const accumulatedVolume = ref(0);
 
   function subscribe(newSymbol: string) {
@@ -24,6 +25,7 @@ export function useSocket(onUpdate: (updateValue: { v: number; c: number; time: 
     }
 
     socket.value.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol.value }))
+    accumulatedVolume.value = 0;
   }
 
   watch(socket, (theSocket) => {
@@ -81,5 +83,6 @@ export function useSocket(onUpdate: (updateValue: { v: number; c: number; time: 
   return {
     subscribe,
     unsubscribe,
+    socketResolution,
   }
 }

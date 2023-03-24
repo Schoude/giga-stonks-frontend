@@ -19,7 +19,11 @@ const isIntervalActive = computed(() => {
   }
 });
 const fetchLiveData = ref(false);
-const {subscribe, unsubscribe} = useSocket(onUpdate);
+const {
+  subscribe,
+  unsubscribe,
+  socketResolution
+} = useSocket(onUpdate);
 const renderType = ref<RenderTypeValues>(RENDER_TYPE.LINE);
 const chartSetup = reactive<{
   data: Candle[];
@@ -51,6 +55,7 @@ const deltaAbsolute = computed(() => (chartSetup.data.at(-1)!.c - chartSetup.dat
 
 watchEffect(async () => {
   const {from, to} = getInterval(interval.value);
+  socketResolution.value = +resolution.value!;
   CANDLES.value = await (await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${props.symbol}&resolution=${resolution.value}&from=${from}&to=${to}&token=cfje729r01que34nv410cfje729r01que34nv41g`)).json() as FHCandles;
   chartSetup.data = collectCandleData(CANDLES.value);
 });
@@ -105,6 +110,10 @@ watch(() => props.symbol, newSymbol => {
     subscribe(newSymbol)
   }
 });
+
+watch(resolution, newVal => {
+  socketResolution.value = +newVal!;
+})
 </script>
 
 <template>
