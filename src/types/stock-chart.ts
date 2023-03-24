@@ -24,6 +24,7 @@ export const INTERVAL = {
   WEEK: 'week',
   DAYS_2: 'days-2',
   DAYS_1: 'days-1',
+  HOURS_6: 'hours-6',
   HOURS_3: 'hours-3',
   HOURS_1: 'hours-1',
   MINUTES_30: 'minutes-30',

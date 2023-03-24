@@ -74,10 +74,22 @@ export function getInterval(interval: IntervalValues): { from: number; to: numbe
       }
     }
 
+    case 'hours-6': {
+      const fromday = new Date(now);
+      fromday.setHours(fromday.getHours() - 6);
+      const from = Math.floor(fromday.getTime() / 1000);
+      const to = Math.floor(now.getTime() / 1000);
+
+      return {
+        from,
+        to,
+      }
+    }
+
     case 'days-1': {
       now.setHours(23, 59, 59, 0);
       const fromday = new Date(now);
-      fromday.setHours(0, 0, 0, 0);
+      fromday.setHours(8, 0, 0, 0);
       const from = fromday.getTime() / 1000;
       const to = now.getTime() / 1000;
 
@@ -92,7 +104,7 @@ export function getInterval(interval: IntervalValues): { from: number; to: numbe
       now.setHours(23, 59, 59, 0);
       const fromday = new Date(now);
       fromday.setDate(fromday.getDate() - 1);
-      fromday.setHours(0, 0, 0, 0);
+      fromday.setHours(8, 0, 0, 0);
       const from = fromday.getTime() / 1000;
       const to = now.getTime() / 1000;
 
@@ -106,7 +118,7 @@ export function getInterval(interval: IntervalValues): { from: number; to: numbe
       now.setHours(23, 59, 59, 0);
       const fromday = new Date(now);
       fromday.setDate(fromday.getDate() - 7);
-      fromday.setHours(0, 0, 0, 0);
+      fromday.setHours(8, 0, 0, 0);
       const from = fromday.getTime() / 1000;
       const to = now.getTime() / 1000;
 

@@ -137,6 +137,15 @@ watch(fetchLiveData, fetchData => {
       <button
         type="button"
         class="btn-interval"
+        :disabled="isIntervalActive('hours-6')"
+        title="Six hours"
+        @click="interval = 'hours-6'"
+      >
+        H-6
+      </button>
+      <button
+        type="button"
+        class="btn-interval"
         :disabled="isIntervalActive('hours-3')"
         title="Three hours"
         @click="interval = 'hours-3'"
