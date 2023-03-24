@@ -12,6 +12,7 @@ const props = defineProps<{
 }>();
 
 const interval = ref<IntervalValues>('days-1')
+const resolution = computed(() => intervalResolution.get(interval.value));
 const isIntervalActive = computed(() => {
   return (givenInterval: IntervalValues) => {
     return interval.value === givenInterval;
@@ -50,8 +51,7 @@ const deltaAbsolute = computed(() => (chartSetup.data.at(-1)!.c - chartSetup.dat
 
 watchEffect(async () => {
   const {from, to} = getInterval(interval.value);
-  const resolution = intervalResolution.get(interval.value);
-  CANDLES.value = await (await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${props.symbol}&resolution=${resolution}&from=${from}&to=${to}&token=cfje729r01que34nv410cfje729r01que34nv41g`)).json() as FHCandles;
+  CANDLES.value = await (await fetch(`https://finnhub.io/api/v1/stock/candle?symbol=${props.symbol}&resolution=${resolution.value}&from=${from}&to=${to}&token=cfje729r01que34nv410cfje729r01que34nv41g`)).json() as FHCandles;
   chartSetup.data = collectCandleData(CANDLES.value);
 });
 
@@ -183,19 +183,20 @@ watch(() => props.symbol, newSymbol => {
     </section>
     <div class="interactions">
       <button
-        type="button"
-        class="btn-render-type"
-        @click="setRenderType"
-      >
-        {{ renderType === RENDER_TYPE.LINE ? 'Draw Candle Chart' : 'Draw Line Chart' }}
-      </button>
-      <button
+        v-if="Number(resolution) <= 5"
         type="button"
         class="btn-live-data"
         :class="[{active: fetchLiveData}]"
         @click="() => fetchLiveData = !fetchLiveData"
       >
         {{ fetchLiveData ? 'Stop Fetching Live Data' : 'Fetch Live Data' }}
+      </button>
+      <button
+        type="button"
+        class="btn-render-type"
+        @click="setRenderType"
+      >
+        {{ renderType === RENDER_TYPE.LINE ? 'Draw Candle Chart' : 'Draw Line Chart' }}
       </button>
     </div>
   </header>
@@ -246,6 +247,10 @@ header button {
   margin-inline-start: auto;
   display: flex;
   gap: .5rem;
+
+  button {
+    min-inline-size: 220px;
+  }
 }
 
 .btn-live-data {
