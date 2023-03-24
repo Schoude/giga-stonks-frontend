@@ -40,9 +40,9 @@ const svgDOMString = computed(() => {
   const yScale = scaleLinear()
   .domain([
       // @ts-expect-error
-      min(props.data.map(d => d.c)) - yScaleDomainMargin.value,
+      min(props.data.map(d => d.l)) - yScaleDomainMargin.value,
       // @ts-expect-error
-      max(props.data.map(d => d.c)) + yScaleDomainMargin.value
+      max(props.data.map(d => d.h)) + yScaleDomainMargin.value
     ])
     .range([innerHeight.value, 0]);
 
