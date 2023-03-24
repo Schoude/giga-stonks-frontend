@@ -22,7 +22,8 @@ const fetchLiveData = ref(false);
 const {
   subscribe,
   unsubscribe,
-  socketResolution
+  socketResolution,
+  accumulatedVolume,
 } = useSocket(onUpdate);
 const renderType = ref<RenderTypeValues>(RENDER_TYPE.LINE);
 const chartSetup = reactive<{
@@ -85,6 +86,7 @@ function onUpdate({v, c, time}: { v: number; c: number; time: Date }) {
 
     chartSetup.data.push(dataToAdd)
     chartSetup.data.shift();
+    accumulatedVolume.value = 0;
   } else {
     console.log('keep data point');
     dataToAdd.time = new Date(lastTick.time.setSeconds(0));

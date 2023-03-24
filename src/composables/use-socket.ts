@@ -33,24 +33,15 @@ export function useSocket(onUpdate: (updateValue: { v: number; c: number; time: 
       return;
     }
 
-    theSocket.addEventListener('open', (event) => {
+    theSocket.addEventListener('open', () => {
       theSocket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': symbol.value }))
     });
 
-    let lastMin: null | number = null;
     theSocket.addEventListener('message', function (event) {
       const ticker = JSON.parse(event.data);
       if (ticker.type === 'ping') return;
 
       const tickerData = ticker.data as SocketTick[];
-
-      let currentMin = 0;
-      const date = new Date(tickerData.at(-1)!.t);
-      currentMin = date.getMinutes();
-
-      if (lastMin === null) {
-        lastMin = currentMin;
-      }
 
       tickerData.forEach((tick: SocketTick) => {
         accumulatedVolume.value += tick.v;
@@ -64,11 +55,6 @@ export function useSocket(onUpdate: (updateValue: { v: number; c: number; time: 
         v: accumulatedVolume.value,
         time: new Date(lastTimestamp),
       });
-
-      if (currentMin > lastMin) {
-        lastMin = currentMin;
-        accumulatedVolume.value = 0;
-      }
     });
   });
 
@@ -84,5 +70,6 @@ export function useSocket(onUpdate: (updateValue: { v: number; c: number; time: 
     subscribe,
     unsubscribe,
     socketResolution,
+    accumulatedVolume,
   }
 }
