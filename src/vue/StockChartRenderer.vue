@@ -102,6 +102,25 @@ const svgDOMString = computed(() => {
     .attr('transform', `translate(${innerWidth.value}, 0)`)
     .call(axisYRight);
 
+  // Volume
+  svg
+    .select('.margin')
+    .append('g')
+    .attr('class', 'volumes')
+    .selectAll('g')
+    .data(props.data)
+    .enter()
+    .append('g')
+    .attr('class', 'volume')
+    .attr('transform', d => {
+      return `translate(${xScale(d.time) - (innerWidth.value / props.data.length / 4)}, 0)`;
+    })
+    .append('rect')
+    .attr('y', d => scaleVolume(d.v))
+    .attr('width', innerWidth.value / props.data.length / 2)
+    .attr('height', d => innerHeightVolume.value - scaleVolume(d.v))
+    .attr('fill', 'rgba(224, 159, 62, 0.07)');
+
   if (props.renderType === RENDER_TYPE.LINE) {
     // Line
     svg
@@ -152,27 +171,8 @@ const svgDOMString = computed(() => {
 
     candles
       .append('title')
-      .text(d => `Open: ${d.o}; Close: ${d.c}; High: ${d.h}; Low: ${d.l}`);
+      .text(d => `Time: ${formatTime(d.time)}\nOpen: ${d.o}\nClose: ${d.c}\nHigh: ${d.h}\nLow: ${d.l}`);
   }
-
-  // Volume
-  svg
-    .select('.margin')
-    .append('g')
-    .attr('class', 'volumes')
-    .selectAll('g')
-    .data(props.data)
-    .enter()
-    .append('g')
-    .attr('class', 'volume')
-    .attr('transform', d => {
-      return `translate(${xScale(d.time) - (innerWidth.value / props.data.length / 4)}, 0)`;
-    })
-    .append('rect')
-    .attr('y', d => scaleVolume(d.v))
-    .attr('width', innerWidth.value / props.data.length / 2)
-    .attr('height', d => innerHeightVolume.value - scaleVolume(d.v))
-    .attr('fill', 'rgba(224, 159, 62, 0.07)');
 
   return svg.node()?.outerHTML;
 });
