@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import { computed, reactive, ref, watch, watchEffect } from 'vue';
 import { useSocket } from '../composables/use-socket';
-import { Candle, FHCandles, intervalResolution, IntervalValues, RenderTypeValues, RENDER_TYPE} from '../types/stock-chart';
+import { Candle, DisplayType, FHCandles, intervalResolution, IntervalValues, RenderTypeValues, RENDER_TYPE} from '../types/stock-chart';
 import { getInterval, collectCandleData, getHigher, getLower } from '../utils';
 import StockChartRenderer from './StockChartRenderer.vue';
 
@@ -9,6 +9,7 @@ const props = defineProps<{
   symbol: string;
   width?: number;
   height?: number;
+  displayType: DisplayType;
 }>();
 
 const interval = ref<IntervalValues>('days-1')
@@ -221,6 +222,8 @@ watch(resolution, newVal => {
     :width="width"
     :margin="margin"
     :renderType="renderType"
+    :displayType="displayType"
+    :interval="interval"
   />
 </template>
 

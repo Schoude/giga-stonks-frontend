@@ -48,3 +48,5 @@ export const RENDER_TYPE = {
 } as const;
 
 export type RenderTypeValues = ObjectValues<typeof RENDER_TYPE>;
+
+export type DisplayType = 'full' | 'widget';

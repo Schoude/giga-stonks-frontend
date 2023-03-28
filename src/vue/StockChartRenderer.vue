@@ -13,7 +13,15 @@ import {
   max,
 } from 'd3';
 import { computed, ref } from 'vue';
-import { Candle, RenderTypeValues, RENDER_TYPE } from '../types/stock-chart';
+import type {
+  Candle,
+  DisplayType,
+  IntervalValues,
+  RenderTypeValues,
+} from '../types/stock-chart';
+import {
+  RENDER_TYPE,
+} from '../types/stock-chart';
 
 const props = defineProps<{
   data: Candle[];
@@ -26,6 +34,8 @@ const props = defineProps<{
     left: number;
   };
   renderType: RenderTypeValues;
+  displayType: DisplayType;
+  interval: IntervalValues;
 }>();
 
 const innerWidth = ref(props.width - props.margin.left - props.margin.right);
@@ -35,6 +45,51 @@ const innerHeightVolume = ref(innerHeight.value);
 const formatTime = timeFormat('%d %b, %H:%M');
 
 const yScaleDomainMargin = computed(() => Number(Math.abs((props.data[0].o - Math.abs(props.data.at(-1)!.o)) / 4).toFixed(4)));
+const candleRenderConfig = computed(() => {
+  if (props.displayType === 'widget') {
+    return {
+      strokeLinecap: 'butt',
+      strokeWidth: '4',
+    };
+  }
+
+  if (
+    props.interval === 'hours-3'
+    || props.interval === 'week'
+  ) {
+    return {
+      strokeLinecap: 'butt',
+      strokeWidth: '4',
+    };
+  }
+  else if (
+    props.interval === 'hours-1'
+    || props.interval === 'minutes-30'
+    || props.interval === 'days-1'
+  ) {
+    return {
+      strokeLinecap: 'butt',
+      strokeWidth: '20',
+    };
+  }
+  else if (props.interval === 'days-2') {
+    return {
+      strokeLinecap: 'butt',
+      strokeWidth: '8',
+    };
+  }
+   else if (props.interval === 'hours-6') {
+    return {
+      strokeLinecap: 'butt',
+      strokeWidth: '18',
+    };
+  } else {
+    return {
+      strokeLinecap: 'butt',
+      strokeWidth: '4',
+    };
+  }
+});
 
 const svgDOMString = computed(() => {
   const yScale = scaleLinear()
@@ -165,8 +220,8 @@ const svgDOMString = computed(() => {
       .attr('class', 'body')
       .attr('y1', d => yScale(d.c))
       .attr('y2', d => yScale(d.o))
-      .attr('stroke-linecap', 'round')
-      .attr('stroke-width', '4')
+      .attr('stroke-linecap', candleRenderConfig.value.strokeLinecap)
+      .attr('stroke-width', candleRenderConfig.value.strokeWidth)
       .attr('stroke', d => d.c > d.o ? '#0e814b' : '#9e3d4f'); // > red : green;
 
     candles

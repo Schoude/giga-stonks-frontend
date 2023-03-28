@@ -9,7 +9,10 @@ defineProps<{
 <template>
   <div class="stock-chart-loader container outlined">
     <Suspense>
-      <StockChart :symbol="symbol" />
+      <StockChart
+        :symbol="symbol"
+        :display-type="'widget'"
+      />
       <template #fallback>
         <p>Loading Chart Data...</p>
       </template>

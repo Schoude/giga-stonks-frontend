@@ -25,6 +25,7 @@ onMounted(() => {
       :symbol="selectedSymbol.symbol"
       :width="chartWidth"
       :height="chartHeight"
+      :display-type="'full'"
     />
   </section>
 </main>
