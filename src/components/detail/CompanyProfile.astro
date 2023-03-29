@@ -19,7 +19,7 @@ export interface Props {
 
 const {companyProfile} = Astro.props;
 ---
-<Container class={'company-profile'} outlined>
+<Container class={'company-profile'} outlined={true}>
   <a class="name" href={companyProfile.weburl} title={`${companyProfile.name} Company Homepage`} target="_blank" rel="noopener">
     <img src={companyProfile.logo} alt={`Logo ${companyProfile.name}`}>
     <h1>

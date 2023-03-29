@@ -1,0 +1,106 @@
+---
+import Container from '../components/container/Container.astro';
+import NavigationPage from '../components/NavigationPage.astro';
+import Layout from "../layouts/Layout.astro";
+import type { EarninigsCalendarResponse } from '../types/earnings-calendar';
+
+const earningsCalendar = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/earnings-calendar')).json() as EarninigsCalendarResponse;
+---
+
+<Layout title="Giga Stonks | Earnings Calendar">
+  <header>
+    <NavigationPage />
+  </header>
+
+  <main>
+    <Container outlined={true} class={'estimates-high'}>
+
+      <h2>High Estimate Earnings</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Report Date</th>
+            <th>Estimate</th>
+            <th>Fiscal Ending Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            earningsCalendar.estimates_high.map(earning => {
+              return (
+                <tr>
+                  <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
+                  <td>{new Date(earning.reportDate).toLocaleDateString()}</td>
+                  <td>{earning.estimate.toFixed(2)}</td>
+                  <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </Container>
+    <Container outlined={true} class={'estimates-low'}>
+      <h2>Low Estimate Earnings</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Report Date</th>
+            <th>Estimate</th>
+            <th>Fiscal Ending Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            earningsCalendar.estimates_low.map(earning => {
+              return (
+                <tr>
+                  <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
+                  <td>{new Date(earning.reportDate).toLocaleDateString()}</td>
+                  <td>{earning.estimate.toFixed(2)}</td>
+                  <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </Container>
+  </main>
+</Layout>
+
+<style lang="scss">
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: .5rem;
+}
+
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+th,
+td {
+  padding: .25rem;
+}
+
+th {
+  color: var(--color-heading);
+}
+
+tbody {
+  tr {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+:global(.navigation-page) {
+  max-inline-size: 624px;
+}
+</style>
