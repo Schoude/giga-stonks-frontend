@@ -31,7 +31,7 @@ const earningsCalendar = await (await fetch('https://giga-stonks-api.shuttleapp.
               return (
                 <tr>
                   <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
-                  <td>{new Date(earning.reportDate).toLocaleDateString()}</td>
+                  <td class={new Date(earning.reportDate).getMonth() === new Date().getMonth() ? 'close': ''}>{new Date(earning.reportDate).toLocaleDateString()}</td>
                   <td>{earning.estimate.toFixed(2)}</td>
                   <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
                 </tr>
@@ -58,7 +58,7 @@ const earningsCalendar = await (await fetch('https://giga-stonks-api.shuttleapp.
               return (
                 <tr>
                   <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
-                  <td>{new Date(earning.reportDate).toLocaleDateString()}</td>
+                  <td class={new Date(earning.reportDate).getMonth() === new Date().getMonth() ? 'close': ''}>{new Date(earning.reportDate).toLocaleDateString()}</td>
                   <td>{earning.estimate.toFixed(2)}</td>
                   <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
                 </tr>
@@ -90,6 +90,12 @@ td {
 
 th {
   color: var(--color-heading);
+}
+
+td {
+  &.close {
+    color: var(--color-heading);
+  }
 }
 
 tbody {
