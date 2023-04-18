@@ -27,7 +27,9 @@ watch(() => props.symbol, async (newValue) => {
   </template>
   <template v-else-if="data">
     <div class="data-display">
-      <dl class="entry" v-for="entry in data" :key="`${entry.year}-${entry.quarter}`">
+      <dl class="entry" v-for="entry in data" :key="`${entry.year}-${entry.quarter}`"
+        :class="entry.surprise > 0 ? 'bullish' : 'bearish'"
+      >
         <dt>Peroid</dt>
         <dd>{{ entry.period }}</dd>
         <dt>Quarter</dt>
@@ -58,12 +60,23 @@ watch(() => props.symbol, async (newValue) => {
 }
 
 .entry {
+  padding: 1rem;
+
   dt {
     font-weight: 700;
   }
 
   dd {
     margin-inline-start: 40px;
+    margin-block-end: .25rem;
   }
+}
+
+.bullish {
+  background-color: #0d1f23;
+}
+
+.bearish {
+  background-color: #281717;
 }
 </style>
