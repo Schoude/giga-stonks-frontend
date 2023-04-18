@@ -1,6 +1,6 @@
 ---
-import Container from '../components/container/Container.astro';
 import NavigationPage from '../components/NavigationPage.astro';
+import TableEarnings from '../components/tables/TableEarnings.astro';
 import Layout from "../layouts/Layout.astro";
 import type { EarninigsCalendarResponse } from '../types/earnings-calendar';
 
@@ -13,97 +13,45 @@ const earningsCalendar = await (await fetch('https://giga-stonks-api.shuttleapp.
   </header>
 
   <main>
-    <Container outlined={true} class={'estimates-high'}>
-
-      <h2>High Estimate Earnings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Report Date</th>
-            <th>Estimate</th>
-            <th>Fiscal Ending Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            earningsCalendar.estimates_high.map(earning => {
-              return (
-                <tr>
-                  <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
-                  <td class={new Date(earning.reportDate).getMonth() === new Date().getMonth() ? 'close': ''}>{new Date(earning.reportDate).toLocaleDateString()}</td>
-                  <td>{earning.estimate.toFixed(2)}</td>
-                  <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-      </table>
-    </Container>
-    <Container outlined={true} class={'estimates-low'}>
-      <h2>Low Estimate Earnings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Report Date</th>
-            <th>Estimate</th>
-            <th>Fiscal Ending Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            earningsCalendar.estimates_low.map(earning => {
-              return (
-                <tr>
-                  <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
-                  <td class={new Date(earning.reportDate).getMonth() === new Date().getMonth() ? 'close': ''}>{new Date(earning.reportDate).toLocaleDateString()}</td>
-                  <td>{earning.estimate.toFixed(2)}</td>
-                  <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-      </table>
-    </Container>
+    <div class="tables">
+      <TableEarnings
+        class={'estimates-high'}
+        earningsData={earningsCalendar.estimates_high}
+        title="High Estimate Earnings"
+      />
+      <TableEarnings
+        class={'estimates-low'}
+        earningsData={earningsCalendar.estimates_low}
+        title="Low Estimate Earnings"
+      />
+    </div>
   </main>
 </Layout>
 
 <style lang="scss">
+@use "../styles/mixins" as *;
+
 main {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: .5rem;
+  min-block-size: 0;
 }
 
-table {
-  border-collapse: collapse;
-  inline-size: 100%;
+.tables {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: .5rem;
+  min-block-size: inherit;
 }
 
-th,
-td {
-  padding: .25rem;
+.table-earnings {
+  overflow-y: scroll;
+  @include scrollbars;
 }
 
-th {
-  color: var(--color-heading);
-}
-
-td {
-  &.close {
-    color: var(--color-heading);
-  }
-}
-
-tbody {
-  tr {
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
+:global(body) {
+  display: grid;
 }
 
 :global(.navigation-page) {

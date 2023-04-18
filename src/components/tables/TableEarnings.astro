@@ -1,0 +1,69 @@
+---
+import type { Earning } from '../../types/earnings-calendar';
+import Container from '../container/Container.astro';
+
+export interface Props {
+  earningsData: Earning[];
+  title: string;
+  class: string;
+}
+
+const {earningsData, title, class: className} = Astro.props;
+---
+<Container outlined={true} class={`table-earnings ${className}`}>
+  <h2>{title}</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Report Date</th>
+        <th>Estimate</th>
+        <th>Fiscal Ending Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        earningsData.map(earning => {
+          return (
+            <tr>
+              <td><a href={`/symbol/${earning.symbol}`}>{earning.name}</a> ({earning.currency})</td>
+              <td class={new Date(earning.reportDate).getMonth() === new Date().getMonth() ? 'close': ''}>{new Date(earning.reportDate).toLocaleDateString()}</td>
+              <td>{earning.estimate.toFixed(2)}</td>
+              <td>{new Date(earning.fiscalDateEnding).toLocaleDateString()}</td>
+            </tr>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</Container>
+
+<style lang="scss">
+table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+th,
+td {
+  padding: .25rem;
+}
+
+th {
+  color: var(--color-heading);
+}
+
+td {
+  &.close {
+    color: var(--color-heading);
+  }
+}
+
+tbody {
+  tr {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+</style>

@@ -1,4 +1,4 @@
-interface Earning {
+export interface Earning {
   currency: string;
   estimate: number;
   fiscalDateEnding: string;
