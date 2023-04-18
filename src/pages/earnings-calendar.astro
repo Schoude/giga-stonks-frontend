@@ -3,6 +3,7 @@ import NavigationPage from '../components/NavigationPage.astro';
 import TableEarnings from '../components/tables/TableEarnings.astro';
 import Layout from "../layouts/Layout.astro";
 import type { EarninigsCalendarResponse } from '../types/earnings-calendar';
+import EPSDataContainer from '../vue/EPSDataContainer.vue';
 
 const earningsCalendar = await (await fetch('https://giga-stonks-api.shuttleapp.rs/api/v1/earnings-calendar')).json() as EarninigsCalendarResponse;
 ---
@@ -25,6 +26,7 @@ const earningsCalendar = await (await fetch('https://giga-stonks-api.shuttleapp.
         title="Low Estimate Earnings"
       />
     </div>
+    <EPSDataContainer client:only />
   </main>
 </Layout>
 
