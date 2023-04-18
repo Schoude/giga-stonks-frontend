@@ -11,3 +11,16 @@ export interface EarninigsCalendarResponse {
   estimates_high: Earning[];
   estimates_low: Earning[];
 }
+
+interface EPSSurprise {
+  actual: number;
+  estimate: number;
+  period: string;
+  quarter: number,
+  surprise: number;
+  surprisePercent: number;
+  symbol: string;
+  year: number;
+}
+
+export type EPSSurprises = EPSSurprise[];
